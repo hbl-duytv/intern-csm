@@ -9,8 +9,8 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/hbl-duytv/intern-csm/database"
 	"github.com/hbl-duytv/intern-csm/models"
+	"github.com/hbl-duytv/intern-csm/services"
 )
 
 func AuthRequired() gin.HandlerFunc {
@@ -39,7 +39,7 @@ func Login(c *gin.Context) {
 	// hash password to md5
 	passwordMD5 := GetMD5Hash(password)
 	user := models.User{}
-	database.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user)
+	services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user)
 	if user.ID != 0 {
 		session.Set("user", username)
 		err := session.Save()
@@ -48,9 +48,7 @@ func Login(c *gin.Context) {
 		} else {
 			// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Successfully authenticated user"})
 			if user.Status == 1 {
-				c.HTML(http.StatusOK, "admin.html", gin.H{
-					"transformUSer": GetUserNotACtive(),
-				})
+				RenderHome(c)
 			} else {
 				message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
 				c.Data(http.StatusOK, "text/html; charset=utf-8", message)
@@ -74,7 +72,7 @@ func RegisterSuccess(c *gin.Context) {
 			Type:     0,
 			Status:   0,
 		}
-		database.DB.Save(&newUser)
+		services.DB.Save(&newUser)
 		messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
 		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 	} else {
@@ -94,7 +92,7 @@ func SendConfirmRegister(c *gin.Context) {
 func GetAllUserNotActive(c *gin.Context) {
 	user := []models.User{}
 	transformUSer := []models.TransformUser{}
-	database.DB.Find(&user, "status=?", 0)
+	services.DB.Find(&user, "status=?", 0)
 	if len(user) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No user need active!"})
 		return
@@ -108,10 +106,10 @@ func GetAllUserNotActive(c *gin.Context) {
 func ConfirmUserAfterRegister(c *gin.Context) {
 	var user models.User
 	idUser := c.Param("id")
-	database.DB.First(&user, idUser)
+	services.DB.First(&user, idUser)
 	status := 1
-	database.DB.Model(&user).Update("status", status)
-	database.DB.Save(&user)
+	services.DB.Model(&user).Update("status", status)
+	services.DB.Save(&user)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 }
 func Logout(c *gin.Context) {
@@ -134,7 +132,7 @@ func GetMD5Hash(text string) string {
 func GetUserNotACtive() []models.TransformUser {
 	user := []models.User{}
 	transformUSer := []models.TransformUser{}
-	database.DB.Find(&user, "status=?", 0)
+	services.DB.Find(&user, "status=?", 0)
 	if len(user) < 0 {
 		return nil
 	}
@@ -147,7 +145,7 @@ func GetUserNotACtive() []models.TransformUser {
 func CheckUserExist(c *gin.Context) {
 	username := c.PostForm("username")
 	user := models.User{}
-	database.DB.Where("username = ?", username).Find(&user)
+	services.DB.Where("username = ?", username).Find(&user)
 	if user.ID == 0 {
 		c.JSON(http.StatusOK, gin.H{"check": true, "message": "Successfully check user"})
 		return
@@ -158,11 +156,14 @@ func CheckUserExist(c *gin.Context) {
 func CheckEmailExist(c *gin.Context) {
 	email := c.PostForm("email")
 	user := models.User{}
-	database.DB.Where("email = ?", email).Find(&user)
+	services.DB.Where("email = ?", email).Find(&user)
 	if user.ID == 0 {
 		c.JSON(http.StatusOK, gin.H{"check": true, "message": "Successfully check email"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "Email exist!"})
 	return
+}
+func RenderIndex(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Login"})
 }

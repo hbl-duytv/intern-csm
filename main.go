@@ -8,6 +8,7 @@ import (
 func main() {
 	router := gin.Default()
 	routers.InitRouter(router)
+	router.Static("/views", "./views")
 	router.LoadHTMLGlob("./views/html/*")
 	//start serve
 	router.Run(":8000")

@@ -9,6 +9,8 @@ import (
 func InitRouter(router *gin.Engine) {
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
+	router.GET("/", controllers.RenderIndex)
+	router.GET("/home", controllers.RenderHome)
 	router.POST("/login", controllers.Login)
 	router.GET("/logout", controllers.Logout)
 	router.POST("/register", controllers.SendConfirmRegister)

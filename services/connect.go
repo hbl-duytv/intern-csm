@@ -1,9 +1,8 @@
-package database
+package services
 
 import (
 	"fmt"
 
-	"github.com/hbl-duytv/intern-csm/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -20,6 +19,4 @@ func init() {
 	} else {
 		fmt.Println("connect db sucessfully")
 	}
-	// Migrate the schema
-	DB.AutoMigrate(&models.User{})
 }
