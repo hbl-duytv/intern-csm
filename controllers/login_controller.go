@@ -48,7 +48,7 @@ func Login(c *gin.Context) {
 		} else {
 			// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Successfully authenticated user"})
 			if user.Status == 1 {
-				RenderHome(c)
+				c.Redirect(301, "/home")
 			} else {
 				message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
 				c.Data(http.StatusOK, "text/html; charset=utf-8", message)
