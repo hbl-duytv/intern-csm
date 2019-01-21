@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Blank Page</title>
+  <title>CMS system</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link href="/views/lib/bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -23,7 +23,7 @@
 <div class="wrapper">
   <header class="main-header">
     <!-- Logo -->
-    <a href="/html/admin.html" class="logo">
+    <a href="/home" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b></b>CMS</span>
       <!-- logo for regular state and mobile devices -->
@@ -65,16 +65,15 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">anhnt</span>
+              <img src="/views/images/user-default-160x160.png" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{.user.Username}}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
                 <p>
-                  anhnt - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  {{.user.Username}} - {{.user.Email}}
                 </p>
               </li>
               <!-- Menu user-->
@@ -83,7 +82,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -92,9 +91,7 @@
       </div>
     </nav>
   </header>
-
   <!-- =============================================== -->
-
   <!-- Left side column. contains the sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -102,10 +99,10 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>anhnt</p>
+          <p>{{.user.Username}}</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -126,7 +123,9 @@
         <li class="active"><a href="https://adminlte.io/docs"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
         <li><a href="./create-post.html"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
         <li><a href="./post-management.html"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
-        <li><a href="./editor-management.html"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
+        {{if eq .user.Type 1}}
+        <li><a href="/editor-management"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
+        {{end}}
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -428,8 +427,6 @@
 <script src="/views/lib/bootstrap-3.3.0/dist/js/bootstrap.min.js"></script>
 <!-- SlimScroll -->
 <script src="/views/lib/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="/views/js/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="/views/lib/adminlte.min.js"></script>
 </body>

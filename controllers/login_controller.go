@@ -13,16 +13,24 @@ import (
 	"github.com/hbl-duytv/intern-csm/services"
 )
 
-func AuthRequired() gin.HandlerFunc {
+func AuthAdminRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		user := session.Get("user")
-		if user == nil {
+		username := session.Get("user")
+		if username == nil {
 			// You'd normally redirect to login page
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
 		} else {
-			// Continue down the chain to handler etc
-			c.Next()
+			if usernameString, ok := username.(string); ok {
+				user := GetCurrentUser(usernameString)
+				if user.Type == 1 {
+					c.Next()
+				} else {
+					c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})
+				}
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
+			}
 		}
 	}
 }
@@ -38,17 +46,18 @@ func Login(c *gin.Context) {
 	}
 	// hash password to md5
 	passwordMD5 := GetMD5Hash(password)
-	user := models.User{}
-	services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user)
-	if user.ID != 0 {
+	currentUser := models.User{}
+	services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&currentUser)
+	if currentUser.ID != 0 {
 		session.Set("user", username)
 		err := session.Save()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})
+			c.Redirect(301, "/login")
 		} else {
-			// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Successfully authenticated user"})
-			if user.Status == 1 {
+			if currentUser.Status == 1 {
 				c.Redirect(301, "/home")
+				// RenderHome(c, user)
 			} else {
 				message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
 				c.Data(http.StatusOK, "text/html; charset=utf-8", message)
@@ -56,8 +65,8 @@ func Login(c *gin.Context) {
 		}
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusNotFound, "error": "Authentication failed"})
+		c.Redirect(301, "/login")
 	}
-
 }
 func RegisterSuccess(c *gin.Context) {
 	username := c.Param("username")
@@ -65,16 +74,24 @@ func RegisterSuccess(c *gin.Context) {
 	email := c.Param("email")
 	passwordMD5 := GetMD5Hash(password)
 	if username != "" && password != "" && email != "" {
-		newUser := models.User{
-			Username: username,
-			Password: passwordMD5,
-			Email:    email,
-			Type:     0,
-			Status:   0,
+		newUser := models.User{}
+		services.DB.Where("username = ?", username).Find(&newUser)
+		if newUser.ID == 0 {
+			newUser := models.User{
+				Username: username,
+				Password: passwordMD5,
+				Name:     "",
+				Email:    email,
+				Type:     0,
+				Status:   0,
+			}
+			services.DB.Create(&newUser)
+			messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
+			c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
+		} else {
+			messageSuccess := []byte("Tài khoản đã được đăng ký!")
+			c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 		}
-		services.DB.Save(&newUser)
-		messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
-		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 	} else {
 		messageFail := []byte("Xác nhận tài khoản thất bại, vui lòng thử lại!")
 		c.Data(http.StatusOK, "text/html; charset=utf-8", messageFail)
@@ -99,7 +116,7 @@ func GetAllUserNotActive(c *gin.Context) {
 	}
 	for _, v := range user {
 		transformUSer = append(transformUSer,
-			models.TransformUser{v.ID, v.Username, v.Email, v.Type, v.Gender, v.BirthDay, v.PhoneNumber, v.Status})
+			models.TransformUser{v.ID, v.Username, v.Email, v.Name, v.Type, v.Gender, v.BirthDay, v.PhoneNumber, v.Status})
 	}
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": transformUSer})
 }
@@ -116,12 +133,14 @@ func Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("user")
 	if user == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusNotFound, "error": "Invalid session token"})
+		c.Redirect(301, "/login")
+		// c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusNotFound, "error": "Invalid session token"})
 	} else {
 		log.Println(user)
 		session.Delete("user")
 		session.Save()
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Successfully logged out"})
+		c.Redirect(301, "/login")
+		// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Successfully logged out"})
 	}
 }
 func GetMD5Hash(text string) string {
@@ -138,7 +157,7 @@ func GetUserNotACtive() []models.TransformUser {
 	}
 	for _, v := range user {
 		transformUSer = append(transformUSer,
-			models.TransformUser{v.ID, v.Username, v.Email, v.Type, v.Gender, v.BirthDay, v.PhoneNumber, v.Status})
+			models.TransformUser{v.ID, v.Username, v.Email, v.Name, v.Type, v.Gender, v.BirthDay, v.PhoneNumber, v.Status})
 	}
 	return transformUSer
 }
