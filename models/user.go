@@ -7,6 +7,7 @@ type User struct {
 	Username    string    `json:"username"`
 	Password    string    `json:"password"`
 	Email       string    `json:"email"`
+	Name        string    `json:"name"`
 	Type        int       `json:"type"`
 	Gender      string    `json:"gender"`
 	Birthday    string    `json:"birthday"`
@@ -14,7 +15,6 @@ type User struct {
 	Status      int       `json:"status"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"update_at"`
-	Name        string    `json:"name"`
 	Token       string    `json:"token"`
 	Confirm     int       `json:"confirm"`
 }

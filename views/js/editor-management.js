@@ -55,9 +55,7 @@ modalConfirmActive(function (confirm) {
                 }
             }
         });
-    } else {
-
-    }
+    } 
 });
 var modalConfirmDeactive = function (callback) {
     $(".btn-confirm-deactive").on("click", function () {
@@ -94,9 +92,7 @@ modalConfirmDeactive(function (confirm) {
                 }
             }
         });
-    } else {
-
-    }
+    } 
 });
 var modalConfirmDelete = function (callback) {
     $(".btn-confirm-delete").on("click", function () {
@@ -133,8 +129,7 @@ modalConfirmDelete(function (confirm) {
                 }
             }
         });
-    } else {
-    }
+    } 
 });
 var modalCreateEditor = function (callback) {
     $("#btn-add-editor").on("click", function () {
@@ -189,9 +184,7 @@ modalCreateEditor(function (confirm) {
                 }
             }
         });
-    } else {
-
-    }
+    } 
 });
 $("#confirmPasswordRegister").focusout(function () {
     var passwordRegister = $("#passwordRegister").val()
