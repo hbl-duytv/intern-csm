@@ -124,8 +124,10 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
         <li><a href="/home"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
+        {{if eq .currentUser.Type 0}}
         <li><a href="/create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
-        <li><a href="/post-management"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+        {{end}}
+        <li><a href="/get-post-admin-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
         <li class="active"><a href="/editor-management"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
       </ul>
     </section>
