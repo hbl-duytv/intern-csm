@@ -15,6 +15,7 @@ $(document).ready( function () {
       });
     });
 });
+
 var idActive
 var idDeactive
 var idDelete
@@ -64,7 +65,7 @@ var modalConfirmDeactive = function(callback){
     $("#deactive-modal").modal('hide');
   });
   
-  $("#modal-btn-back").on("click", function(){
+  $("#modal-btn-back-deactive").on("click", function(){
     callback(false);
     $("#deactive-modal").modal('hide');
   });
@@ -95,12 +96,12 @@ var modalConfirmDelete = function(callback){
         idDelete = this.id.substring(this.id.indexOf("-")+1)
         $("#delete-modal").modal('show');
       });
-    $("#modal-btn-ok").on("click", function(){
+    $("#modal-btn-ok-delete").on("click", function(){
       callback(true);
       $("#delete-modal").modal('hide');
     });
     
-    $("#modal-btn-back").on("click", function(){
+    $("#modal-btn-back-delete").on("click", function(){
       callback(false);
       $("#delete-modal").modal('hide');
     });
@@ -122,7 +123,12 @@ modalConfirmDelete(function(confirm){
 				}
 			}
 		});
+<<<<<<< HEAD
   }
+=======
+    }else{     
+    }
+>>>>>>> Update handle add editor
 });
 var modalCreateEditor = function(callback){
   $("#btn-add-editor").on("click", function(){
