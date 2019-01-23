@@ -123,12 +123,7 @@ modalConfirmDelete(function(confirm){
 				}
 			}
 		});
-<<<<<<< HEAD
   }
-=======
-    }else{     
-    }
->>>>>>> Update handle add editor
 });
 var modalCreateEditor = function(callback){
   $("#btn-add-editor").on("click", function(){
