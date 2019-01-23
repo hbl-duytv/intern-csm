@@ -14,7 +14,6 @@ func InitRouter(router *gin.Engine) {
 	router.GET("/login", controllers.Index)
 	router.GET("/home", controllers.Home)
 	router.GET("/editor-management2", controllers.RenderEditorManagement)
-
 	router.GET("/confirm-register/:token", controllers.RegisterSuccess)
 	router.GET("/logout", controllers.Logout)
 	router.GET("/get-post-admin-permission3", controllers.RenderPostManagementAdmin)

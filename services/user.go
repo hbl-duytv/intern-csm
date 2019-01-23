@@ -110,7 +110,7 @@ func HasLimitTimeConfirm(user models.User) bool {
 
 func GetCurrentUser(c *gin.Context) interface{} {
 	session := sessions.Default(c)
-	session.Set("user", SessionName)
+	// session.Set("user", SessionName)
 	return session.Get("user")
 }
 
