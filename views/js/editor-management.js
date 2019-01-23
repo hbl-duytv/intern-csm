@@ -5,6 +5,7 @@ $(document).ready( function () {
       location.reload()
     });
 });
+
 var idActive
 var idDeactive
 var idDelete
@@ -54,7 +55,7 @@ var modalConfirmDeactive = function(callback){
     $("#deactive-modal").modal('hide');
   });
   
-  $("#modal-btn-back").on("click", function(){
+  $("#modal-btn-back-deactive").on("click", function(){
     callback(false);
     $("#deactive-modal").modal('hide');
   });
@@ -85,12 +86,12 @@ var modalConfirmDelete = function(callback){
         idDelete = this.id.substring(this.id.indexOf("-")+1)
         $("#delete-modal").modal('show');
       });
-    $("#modal-btn-ok").on("click", function(){
+    $("#modal-btn-ok-delete").on("click", function(){
       callback(true);
       $("#delete-modal").modal('hide');
     });
     
-    $("#modal-btn-back").on("click", function(){
+    $("#modal-btn-back-delete").on("click", function(){
       callback(false);
       $("#delete-modal").modal('hide');
     });
@@ -112,7 +113,100 @@ modalConfirmDelete(function(confirm){
 				}
 			}
 		});
-    }else{
-        // $("#result").html("NO CONFIRMADO");
+    }else{     
     }
+});
+var modalCreateEditor = function(callback){
+  $("#btn-add-editor").on("click", function(){
+      $("#create-editor-modal").modal('show');
+    });
+  $("#modal-btn-ok-create").on("click", function(){
+    callback(true);
+    $("#create-editor-modal").modal('hide');
+  });
+  $("#modal-btn-back-create").on("click", function(){
+    callback(false);
+    $("#create-editor-modal").modal('hide');
+  });
+}; 
+modalCreateEditor(function(confirm){
+  var usernameRegister = $("#usernameRegister").val()
+  var passwordRegister = $("#passwordRegister").val()
+  var emailRegister = $("#emailRegister").val()
+  var confirmPasswordRegister = $("#confirmPasswordRegister").val()
+  var nameRegister = $("#nameRegister").val()
+  var genderRegister = $("#genderRegister").val()
+  var birthdayRegister = $("#birthdayRegister").val()
+  var phoneNumberRegister = $("#phoneNumberRegister").val()
+  var statusRegister = $("#statusRegister").val()
+  if (passwordRegister !== confirmPasswordRegister) {
+    $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
+  }else if(confirm){
+      $.ajax({
+      type:'post',
+      url:'http://localhost:8000/create-user',
+      data:{
+        'username': usernameRegister,
+        'password': passwordRegister,
+        'email': emailRegister,
+        'name': nameRegister,
+        'gender': genderRegister,
+        'birthday': birthdayRegister,
+        'phone_number': phoneNumberRegister,
+        'status': statusRegister
+      },
+      dataType:'json',
+      success: function(result){
+        if(result.status == 201){
+          $("#labelNotiModel").text('Tạo biên tập viên thành công!');
+          $("#notification-modal").modal('show');
+        } else {
+          $("#labelNotiModel").text('Tạo biên tập viên thất bại!');
+          $("#notification-modal").modal('show');
+        }
+      }
+  });
+  }else{
+     
+  }
+});
+$("#confirmPasswordRegister").focusout(function(){
+  var passwordRegister = $("#passwordRegister").val()
+  var confirmPasswordRegister = $("#confirmPasswordRegister").val()
+  if (passwordRegister !== confirmPasswordRegister) {
+    $('#messageConfirmPass').css('color', 'red');
+    $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
+    $('#modal-btn-ok-create').attr('disabled','disabled');
+  }else {
+    $('#messageConfirmPass').css('color', 'green');
+    $("#messageConfirmPass").text('');
+    $('#modal-btn-ok-create').removeAttr('disabled');
+  }
+});
+$("#usernameRegister").focusout(function() {
+  let username = $("#usernameRegister").val()
+  checkUserExist(username, function(result){
+    if(result == false){
+      $('#messageUsername').css('color', 'red');
+      $('#messageUsername').text('Tài khoản đã tồn tại!');
+      $('#modal-btn-ok-create').attr('disabled','disabled');
+    } else {
+      $('#messageUsername').css('color', 'green');
+      $('#messageUsername').text('Tài khoản có thể sử dụng!');
+      $('#modal-btn-ok-create').removeAttr('disabled');
+    }
+  });
+});
+$("#emailRegister").focusout(function() {
+  let email = $("#emailRegister").val()
+  checkEmailExist(email, function(result){
+    if(result == false){
+      $('#messageEmail').css('color', 'red');
+      $('#messageEmail').text('Email đã tồn tại!');
+      $('#modal-btn-ok-create').attr('disabled','disabled');
+    } else {
+      $('#messageEmail').hide();
+      $('#modal-btn-ok-create').removeAttr('disabled');
+    }
+  })
 });

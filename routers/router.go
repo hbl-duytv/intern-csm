@@ -25,6 +25,7 @@ func InitRouter(router *gin.Engine) {
 		privateRouter.POST("/active-editor", controllers.ActiveEditorUser)
 		privateRouter.POST("/deactive-editor", controllers.DeactiveEditorUser)
 		privateRouter.POST("/delete-user", controllers.DeleteUser)
+		privateRouter.POST("/create-user", controllers.CreateUser)
 		privateRouter.GET("/editor-management", controllers.RenderEditorManagement)
 	}
 	privateRouter.Use(controllers.AuthAdminRequired())

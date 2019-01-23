@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -58,6 +59,34 @@ func DeleteUser(c *gin.Context) {
 	}
 
 }
+func CreateUser(c *gin.Context) {
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+	email := c.PostForm("email")
+	name := c.PostForm("name")
+	gender := c.PostForm("gender")
+	birthday := c.PostForm("birthday")
+	if phoneNumber, error := strconv.Atoi(c.PostForm("phone_number")); error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Phone number error!"})
+	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
+	} else {
+		newUser := models.User{
+			Username:    username,
+			Password:    GetMD5Hash(password),
+			Email:       email,
+			Name:        name,
+			Gender:      gender,
+			BirthDay:    birthday,
+			PhoneNumber: phoneNumber,
+			Type:        0,
+			Status:      status,
+		}
+		services.DB.Create(&newUser)
+		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
+	}
+}
+
 func RenderEditorManagement(c *gin.Context) {
 	editors := GetAllEditorUser()
 	session := sessions.Default(c)
