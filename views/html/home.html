@@ -121,9 +121,13 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
         <li class="active"><a href="https://adminlte.io/docs"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
-        <li><a href="./create-post.html"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
-        <li><a href="./post-management.html"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
-        {{if eq .user.Type 1}}
+        {{if eq .user.Type 0}} <!--editor permission-->
+        <li><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
+        
+        <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+        {{else}}
+         <!--admin permission-->
+        <li><a href="/get-post-admin-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
         <li><a href="/editor-management"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
         {{end}}
       </ul>
