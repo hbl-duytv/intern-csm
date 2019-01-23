@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="/views/css/AdminLTE.min.css">
   <link rel="stylesheet" href="/views/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="/views/lib/data-tables/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -189,7 +190,7 @@
                   </tr>
                 {{end}}
               </tbody>
-      </table>
+            </table>
       </div>
       <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="active-modal">
           <div class="modal-dialog modal-sm">
@@ -288,7 +289,7 @@
                       </div>
                       <div class="form-group">
                           <label>Ngày sinh</label>
-                          <input name="birthday" id="birthdayRegister" type="text" class="form-control" placeholder="ngày sinh" />
+                          <input  type="text" name="birthday" id="birthdayRegister" class="form-control" placeholder="dd-mm-yyyy">
                       </div>
                       <div class="form-group">
                         <label>Số điện thoại</label>
@@ -329,6 +330,7 @@
 <script src="/views/lib/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="/views/lib/bootstrap-3.3.0/dist/js/bootstrap.min.js"></script>
+ <!-- date picker -->
 <!-- SlimScroll -->
 <script src="/views/lib/jquery.slimscroll.min.js"></script>
 <script src="/views/lib/jquery.validate.min.js"></script>
@@ -338,6 +340,7 @@
 <script src="/views/lib/data-tables/jquery.dataTables.min.js"></script>
 <!-- Handle js -->
 <script src="/views/js/common.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="/views/js/editor-management.js"></script>
 </body>
 </html>

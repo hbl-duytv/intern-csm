@@ -4,6 +4,17 @@ $(document).ready( function () {
       $('#notification-modal').modal('toggle');
       location.reload()
     });
+    vadidateRegister('register-form');
+    $(function() {
+      $( "#birthdayRegister" ).datepicker({
+          dateFormat : 'dd/mm/yy',
+          changeMonth : true,
+          changeYear : true,
+          yearRange: '-100y:c+nn',
+          maxDate: '-1d'
+      });
+  });
+ 
 });
 
 var idActive
