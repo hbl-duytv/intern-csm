@@ -80,44 +80,49 @@ modalConfirmDelete(function (confirm) {
     // $("#result").html("NO CONFIRMADO");
   }
 });
-var modalDeActivePost = function(callback){
-  $(".btn-not-browser-post").on("click", function(){
-    idDeActive = this.id.substring(this.id.indexOf("-")+1)
+var modalDeActivePost = function (callback) {
+  $(".btn-not-browser-post").on("click", function () {
+    idDeActive = this.id.substring(this.id.indexOf("-") + 1)
     $("#deactive-modal").modal('show');
   });
-  $("#modal-btn-ok-deactive").on("click", function(){
+  $("#modal-btn-ok-deactive").on("click", function () {
     callback(true);
     $("#deactive-modal").modal('hide');
   });
-  
-  $("#modal-btn-back").on("click", function(){
+
+  $("#modal-btn-back").on("click", function () {
     callback(false);
     $("#deactive-modal").modal('hide');
   });
-}; 
-modalDeActivePost(function(confirm){
-  if(confirm){
-      $.ajax({
-    type:'post',
-    url:'http://localhost:8000/deactive-status-post',
-    data:{'id':idDeActive},
-    dataType:'json',
-    success: function(result){
-      if(result.status == 200){
-        $('#labelNotiModel').text('Bỏ duyệt thành công!');
-        $('#notification-modal').modal('show');
-      } else {
-        $('#labelNotiModel').text('Bỏ duyệt thất bại!');
-        $('#notification-modal').modal('show');
+};
+modalDeActivePost(function (confirm) {
+  if (confirm) {
+    $.ajax({
+      type: 'post',
+      url: 'http://localhost:8000/deactive-status-post',
+      data: { 'id': idDeActive },
+      dataType: 'json',
+      success: function (result) {
+        if (result.status == 200) {
+          $('#labelNotiModel').text('Bỏ duyệt thành công!');
+          $('#notification-modal').modal('show');
+        } else {
+          $('#labelNotiModel').text('Bỏ duyệt thất bại!');
+          $('#notification-modal').modal('show');
+        }
       }
-    }
-  });
-  }else{
+    });
+  } else {
 
   }
 });
 $('.btn-update-post').click(function () {
-  document.location.href = "/render-update-post";  
+  idPost = this.id.substring(this.id.indexOf("-") + 1)
+  document.location.href = "/render-update-post/" + idPost;
+})
+$('.btn-detail-post').click(function () {
+  idPost = this.id.substring(this.id.indexOf("-") + 1)
+  document.location.href = "/render-detail-post/" + idPost;
 })
 
 

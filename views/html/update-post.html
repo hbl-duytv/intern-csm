@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>update post</title>
+    <title>Update post</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link href="/views/lib/bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -150,26 +150,27 @@
             <section class="content">
                 <form role="form">
                     <!-- text input -->
+
                     <div class="form-group">
                         <label>Tiêu đề</label>
-                        <input type="text" name="title" class="title form-control" id="title" placeholder="Tiêu đề ...">
+                        <input type="text" name="title" class="title form-control" id="title" value="{{.post.Title}}">
                     </div>
                     <div class="form-group">
                         <label>Chủ đề</label>
-                        <input type="text" name="topic" class="topic form-control" id="topic" placeholder="Chủ đề ...">
+                        <input type="text" name="topic" class="topic form-control" id="topic" value="{{.post.Topic}}">
                     </div>
                     <div class="form-group">
                         <label>Mô tả</label>
-                        <input type="text" name="description" class="description form-control" id="description"
-                            placeholder="Mô tả ...">
+                        <input type="text" name="description" class="description form-control" id="description" value="{{.post.Description}}">
                     </div>
                     <!-- textarea -->
                     <div class="form-group">
                         <label>Nội dung</label>
-                        <textarea name="content" class="content-area form-control" id="content" rows="3" placeholder="Enter ..."></textarea>
+                        <textarea name="content" class="content-area form-control" id="content-area" rows="3">{{.post.Content}}</textarea>
                     </div>
                     <div class="form-group">
-                        <button type="button" class="btn-create-post btn btn-primary" id="create-{{.user.ID}}">Sửa bài viết</button>
+                        <button type="button" class="btn-update-post btn btn-primary" id="update-{{.post.ID}}">Sửa bài
+                            viết</button>
                         <!-- <button id="btn-create-post" class="btn-create-post btn btn-primary">Tạo bài viết</button> -->
 
 
@@ -183,7 +184,7 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="labelActiveModal">Tạo bài viết này!</h4>
+                                <h4 class="modal-title" id="labelActiveModal">Sửa bài viết này!</h4>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="modal-btn-back-active">Trở lại</button>
@@ -266,7 +267,13 @@
     <!-- AdminLTE App -->
     <script src="/views/lib/adminlte.min.js"></script>
     <!-- <script src="/views/js/editor-management.js"></script> -->
-    <script src="/views/js/create-post.js"></script>
+    <script src="/views/js/update-post.js"></script>
+    <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
+    <script>
+        // Replace the <textarea id="editor1"> with a CKEditor
+        // instance, using default configuration.
+        CKEDITOR.replace('content-area');
+    </script>
 </body>
 
 </html>

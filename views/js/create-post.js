@@ -56,7 +56,9 @@ $(document).ready(function () {
         location.reload()
     });
 });
+CKEDITOR.replace('content-area');
 var creator, title, topic, description, content;
+
 var modalCreatePost = function (callback) {
     $(".btn-create-post").on("click", function () {
         creator = this.id.substring(this.id.indexOf("-") + 1);
@@ -65,7 +67,7 @@ var modalCreatePost = function (callback) {
         console.log(title);
         topic = $('.topic').val();
         description = $('.description').val();
-        content = $('.content-area').val();
+        content = CKEDITOR.instances['content-area'].getData();
         $("#active-modal").modal('show');
     });
     $("#modal-btn-ok-active").on("click", function () {
@@ -105,11 +107,11 @@ modalCreatePost(function (confirm) {
     }
 });
 function ResetValue() {
-    title = $('.title').val("");
+    $('.title').val("");
 
-    topic = $('.topic').val("");
-    description = $('.description').val("");
-    content = $('.content-area').val("");
+    $('.topic').val("");
+    $('.description').val("");
+    CKEDITOR.instances['content-area'].setData("");
 }
 
 

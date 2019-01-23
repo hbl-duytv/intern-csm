@@ -35,7 +35,8 @@ func InitRouter(router *gin.Engine) {
 		privateRouter.POST("/delete-post", controllers.DeletePost)
 		privateRouter.GET("/editor-management", controllers.RenderEditorManagement)
 		privateRouter.GET("/render-create-post", controllers.RenderCreatePost)
-		privateRouter.GET("/render-update-post", controllers.RenderUpdatePost)
+		privateRouter.GET("/render-update-post/:id", controllers.RenderUpdatePost)
+		privateRouter.GET("/render-detail-post/:id", controllers.RenderDetailPost)
 	}
 	privateRouter.Use(controllers.AuthAdminRequired())
 }

@@ -16,30 +16,31 @@ import (
 func GetPostWithAdminPermission(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
-	// txtStatus := "Bài viết chưa được duyệt"
+
 	var transformPost []models.TransformPost
 	var posts []models.Posts
-	// status := 0
+
 	services.DB.Find(&posts)
 	if len(posts) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No posts found!"})
-		return
-	}
-	for _, v := range posts {
-		var user models.User
-		services.DB.Select("name").Where("id=?", v.Creator).Find(&user)
-		fmt.Println(services.DB.Debug().Select("name").Where("id=?", v.Creator).Find(&user).Error)
-		transformPost = append(transformPost, models.TransformPost{
-			v.ID,
-			user.Name,
-			v.Title,
-			v.Topic,
-			v.Description,
-			v.Content,
-			v.Status,
-			v.CreatedAt,
-			v.UpdatedAt,
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "No posts found!"})
+
+	} else {
+		for _, v := range posts {
+			var user models.User
+			services.DB.Select("name").Where("id=?", v.Creator).Find(&user)
+
+			transformPost = append(transformPost, models.TransformPost{
+				v.ID,
+				user.Name,
+				v.Title,
+				v.Topic,
+				v.Description,
+				v.Content,
+				v.Status,
+				v.CreatedAt,
+				v.UpdatedAt,
+			})
+		}
 	}
 
 	if usernameString, ok := username.(string); ok {
@@ -66,11 +67,7 @@ func GetPostWithEditorPermission(c *gin.Context) {
 		return
 	}
 	for _, v := range posts {
-		// if v.Status == 0 {
-		// 	txtStatus = "Bài viết chưa được duyệt"
-		// } else {
-		// 	txtStatus = "Bài viết đã được duyệt"
-		// }
+
 		var user models.User
 		services.DB.Select("name").Where("id=?", v.Creator).Find(&user)
 
@@ -95,16 +92,21 @@ func RenderCreatePost(c *gin.Context) {
 	user := GetCurrentUser(username.(string))
 
 	c.HTML(http.StatusOK, "create-post.html", gin.H{"user": user})
-
 }
+
 func RenderUpdatePost(c *gin.Context) {
-	session := sessions.Default(c)
-	username := session.Get("user")
-	user := GetCurrentUser(username.(string))
-	idPost := c.PostForm("id")
-	var posts models.Posts
-	services.DB.Where("id=?", idPost).Find(&posts)
-	c.HTML(http.StatusOK, "update-post.html", gin.H{"user": user, "posts": posts})
+	idPost := c.Param("id")
+	var post models.Posts
+	services.DB.Find(&post, "id=?", idPost)
+	// c.JSON(http.StatusOK, gin.H{"data": post, "status": http.StatusOK})
+	c.HTML(http.StatusOK, "update-post.html", gin.H{"post": post})
+	// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": posts, "user": user})
+}
+func RenderDetailPost(c *gin.Context) {
+	idPost := c.Param("id")
+	var post models.Posts
+	services.DB.Find(&post, "id=?", idPost)
+	c.HTML(http.StatusOK, "detail-post.html", gin.H{"post": post})
 
 }
 func CreatePost(c *gin.Context) {

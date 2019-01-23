@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Create post</title>
+  <title>Create new post</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link href="/views/lib/bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -124,9 +124,9 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">MAIN NAVIGATION</li>
-          <li><a href="./admin.html"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
+          <li><a href=""><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
 
-          <li class="active"><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
+          <!-- <li class="active"><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li> -->
           <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
 
         </ul>
@@ -142,8 +142,8 @@
           Tạo bài viết
         </h1>
         <ol class="breadcrumb">
-          <li><a href="./admin.html"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li><a href="./create-post.html">Tạo bài viết</a></li>
+          <li><a href="/home"><i class="fa fa-dashboard"></i> Home</a></li>
+          <li><a href="/render-create-post">Tạo bài viết</a></li>
         </ol>
       </section>
       <!-- Main content -->
@@ -165,7 +165,7 @@
           <!-- textarea -->
           <div class="form-group">
             <label>Nội dung</label>
-            <textarea name="content" class="content-area form-control" id="content" rows="3" placeholder="Enter ..."></textarea>
+            <textarea name="content-area" class="content-area form-control" id="content-area" rows="3" placeholder="Enter ..."></textarea>
           </div>
           <div class="form-group">
             <button type="button" class="btn-create-post btn btn-primary" id="create-{{.user.ID}}">Tao</button>
@@ -257,7 +257,14 @@
   <!-- AdminLTE App -->
   <script src="/views/lib/adminlte.min.js"></script>
   <!-- <script src="/views/js/editor-management.js"></script> -->
+  
+  <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
   <script src="/views/js/create-post.js"></script>
+  <!-- <script>
+      // Replace the <textarea id="editor1"> with a CKEditor
+      // instance, using default configuration.
+      CKEDITOR.replace('content-area');
+  </script> -->
 </body>
 
 </html>
