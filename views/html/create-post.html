@@ -168,16 +168,71 @@
             <textarea name="content" class="content-area form-control" id="content" rows="3" placeholder="Enter ..."></textarea>
           </div>
           <div class="form-group">
-              <button type="button" class="btn-create-post btn btn-primary" id="create-{{.user.ID}}">Tao</button>
+            <button type="button" class="btn-create-post btn btn-primary" id="create-{{.user.ID}}">Tao</button>
             <!-- <button id="btn-create-post" class="btn-create-post btn btn-primary">Tạo bài viết</button> -->
-            
+
 
 
           </div>
         </form>
-       
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="active-modal">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelActiveModal">Tạo bài viết này!</h4>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modal-btn-back-active">Trở lại</button>
+                <button type="button" class="btn btn-primary" id="modal-btn-ok-active">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="deactive-modal">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelDeactiveModal">Bỏ kích hoạt tài khoản này</h4>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modal-btn-back-deactive">Trở lại</button>
+                <button type="button" class="btn btn-primary" id="modal-btn-ok-deactive">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="delete-modal">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelDeleteModal">Xóa tài khoản này! </h4>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modal-btn-back-delete">Trở lại</button>
+                <button type="button" class="btn btn-primary" id="modal-btn-ok-delete">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="notification-modal">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelNotiModel"></h4>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="modal-btn-ok-noti">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
       <!-- /.content -->
+
     </div>
     <!-- /.content-wrapper -->
 

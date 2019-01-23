@@ -4,10 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Posts - Management</title>
+    <title>update post</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link href="views/lib/bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="/views/lib/bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -15,7 +15,6 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/views/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/views/css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="/views/lib/data-tables/jquery.dataTables.min.css">
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -25,7 +24,7 @@
     <div class="wrapper">
         <header class="main-header">
             <!-- Logo -->
-            <a href="/home" class="logo">
+            <a href="/html/admin.html" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b></b>CMS</span>
                 <!-- logo for regular state and mobile devices -->
@@ -68,23 +67,24 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/views/images/user-default-160x160.png" class="user-image" alt="User Image">
-                                <span class="hidden-xs">{{.currentUser.Username}}</span>
+                                <span class="hidden-xs">anhnt</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
                                     <p>
-                                        {{.currentUser.Username}} - {{.currentUser.Email}}
+                                        anhnt - Web Developer
+                                        <small>Member since Nov. 2012</small>
                                     </p>
                                 </li>
                                 <!-- Menu user-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="/profile" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -106,8 +106,8 @@
                         <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>{{.currentUser.Username}}</p>
-                        <p></a><i class="fa fa-circle text-success"></i> Online</p>
+                        <p>anhnt</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <!-- search form -->
@@ -124,21 +124,11 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li><a href="/home"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
-                    {{if eq .user.Type 0}}
-                    <!--editor permission-->
-                    <li><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
+                    <li><a href="./admin.html"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
 
+                    <li class="active"><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
                     <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
-                    {{else}}
-                    <!--admin permission-->
-                    <li><a href="/get-post-admin-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
 
-
-
-                    <li class="active"><a href="/editor-management"><i class="fa fa-users"></i> <span>Quản lý biên tập
-                                viên</span></a></li>
-                    {{end}}
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -149,101 +139,43 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Quản lý bài viết
+                    Sửa bài viết
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="/home"><i class="fa fa-dashboard"></i> Home</a></li>
-                    {{if eq .user.Type 0}}
-                    <li><a href="/get-post-editor-permission">Quản lý bài viết</a></li>
-                    {{else}}
-                    <li><a href="/get-post-admin-permission">Quản lý bài viết</a></li>
-                    {{end}}
+                    <li><a href="./admin.html"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li><a href="./create-post.html">Sửa bài viết</a></li>
                 </ol>
             </section>
             <!-- Main content -->
             <section class="content">
-                <!-- <div>
-                    {{if eq .user.Type 0}}
-                    <button class="btn btn-primary" id="add-editor">Thêm bài viết</button>
-                    {{end}}
-                </div> -->
-                <hr>
-                <div>
-                    <table id="editorsTable" class="display">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Creator</th>
-                                <th>Title</th>
-                                <th>Topic</th>
-                                <th>Description</th>
-                                <th>Content</th>
-                                <th>Status</th>
-                                <th>CreatedAt</th>
-                                <th>UpdatedAt</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{if eq .user.Type 0}}
-                            {{range .transformPost}}
-                            <tr>
-                                <td>{{.ID}}</td>
-                                <td>{{.Creator}}</td>
-                                <td>{{.Title}}</td>
-                                <td>{{.Topic}}</td>
-                                <td>{{.Description}}</td>
-                                <td>{{.Content}}</td>
-                                <td>
-                                    {{if eq .Status 0}}
-                                    Bài viết chưa được duyệt
-                                    {{else}}
-                                    Bài viết đã được duyệt
-                                    {{end}}
-                                </td>
-                                <td>{{.CreatedAt}}</td>
-                                <td>{{.UpdatedAt}}</td>
-                                <td>
-                                    <button name="updatepost-{{.ID}}" class="btn-update-post">Sửa</button>
-                                    <button class="btn-delete-post" id="delete-{{.ID}}">Xóa</button>
-                                </td>
+                <form role="form">
+                    <!-- text input -->
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" name="title" class="title form-control" id="title" placeholder="Tiêu đề ...">
+                    </div>
+                    <div class="form-group">
+                        <label>Chủ đề</label>
+                        <input type="text" name="topic" class="topic form-control" id="topic" placeholder="Chủ đề ...">
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <input type="text" name="description" class="description form-control" id="description"
+                            placeholder="Mô tả ...">
+                    </div>
+                    <!-- textarea -->
+                    <div class="form-group">
+                        <label>Nội dung</label>
+                        <textarea name="content" class="content-area form-control" id="content" rows="3" placeholder="Enter ..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-create-post btn btn-primary" id="create-{{.user.ID}}">Sửa bài viết</button>
+                        <!-- <button id="btn-create-post" class="btn-create-post btn btn-primary">Tạo bài viết</button> -->
 
-                            </tr>
-                            {{end}}
-                            {{else}}
-                            {{range .transformPost}}
-                            <tr>
-                                <td>{{.ID}}</td>
-                                <td>{{.Creator}}</td>
-                                <td>{{.Title}}</td>
-                                <td>{{.Topic}}</td>
-                                <td>{{.Description}}</td>
-                                <td>{{.Content}}</td>
-                                <td>
-                                    {{if eq .Status 0}}
-                                    Bài viết chưa được duyệt
-                                    {{else}}
-                                    Bài viết đã được duyệt
-                                    {{end}}
-                                </td>
-                                <td>{{.CreatedAt}}</td>
-                                <td>{{.UpdatedAt}}</td>
-                                <td>
-                                    {{if eq .Status 0}}
-                                    <button class="btn-browser-post" id="browser-{{.ID}}">Duyệt</button>
-                                    {{else}}
-                                    <button class="btn-not-browser-post" id="notbrowser-{{.ID}}">Bỏ duyệt</button>
-                                    {{end}}
-                                    <button class="btn-update-post">Sửa</button>
-                                    <button class="btn-delete-post" id="delete-{{.ID}}">Xóa</button>
-                                </td>
 
-                            </tr>
-                            {{end}}
-                            {{end}}
-                        </tbody>
-                    </table>
-                </div>
+
+                    </div>
+                </form>
                 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
                     id="active-modal">
                     <div class="modal-dialog modal-sm">
@@ -251,7 +183,7 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="labelActiveModal">Duyệt bài viết này!</h4>
+                                <h4 class="modal-title" id="labelActiveModal">Tạo bài viết này!</h4>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="modal-btn-back-active">Trở lại</button>
@@ -267,7 +199,7 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="labelDeactiveModal">Bỏ duyệt bài viết này!</h4>
+                                <h4 class="modal-title" id="labelDeactiveModal">Bỏ kích hoạt tài khoản này</h4>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="modal-btn-back-deactive">Trở lại</button>
@@ -283,27 +215,11 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="labelDeleteModal">Xóa bài viết này! </h4>
+                                <h4 class="modal-title" id="labelDeleteModal">Xóa tài khoản này! </h4>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="modal-btn-back-delete">Trở lại</button>
                                 <button type="button" class="btn btn-primary" id="modal-btn-ok-delete">OK</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
-                    id="update-modal">
-                    <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="labelUpdateModal">Sửa bài viết này! </h4>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="modal-btn-back-update">Trở lại</button>
-                                <button type="button" class="btn btn-primary" id="modal-btn-ok-update">OK</button>
                             </div>
                         </div>
                     </div>
@@ -325,6 +241,7 @@
                 </div>
             </section>
             <!-- /.content -->
+
         </div>
         <!-- /.content-wrapper -->
 
@@ -344,12 +261,12 @@
     <script src="/views/lib/bootstrap-3.3.0/dist/js/bootstrap.min.js"></script>
     <!-- SlimScroll -->
     <script src="/views/lib/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <!-- <script src="/views/js/fastclick.js"></script> -->
     <!-- AdminLTE App -->
     <script src="/views/lib/adminlte.min.js"></script>
-    <!-- Data tables -->
-    <script src="/views/lib/data-tables/jquery.dataTables.min.js"></script>
-    <!-- Handle js -->
-    <script src="/views/js/post-management.js"></script>
+    <!-- <script src="/views/js/editor-management.js"></script> -->
+    <script src="/views/js/create-post.js"></script>
 </body>
 
 </html>

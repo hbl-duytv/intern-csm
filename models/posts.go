@@ -20,7 +20,7 @@ type TransformPost struct {
 	Topic       string    `json:"topic"`
 	Description string    `json:"description"`
 	Content     string    `json:"content"`
-	Status      string    `json:"status"`
+	Status      int       `json:"status"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

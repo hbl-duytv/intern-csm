@@ -23,15 +23,19 @@ func InitRouter(router *gin.Engine) {
 
 	router.POST("/confirm-user-after-register/:id", controllers.ConfirmUserAfterRegister)
 	router.POST("/login", controllers.Login)
-	router.POST("/update-status-post", controllers.UpdateStatusPost)
+	router.POST("/active-status-post", controllers.ActiveStatusPost)
+	router.POST("/deactive-status-post", controllers.DeActiveStatusPost)
 	router.POST("/create-post", controllers.CreatePost)
+	router.POST("/update-content-post", controllers.UpdateContentPost)
 	privateRouter := router.Group("/")
 	{
 		privateRouter.POST("/active-editor", controllers.ActiveEditorUser)
 		privateRouter.POST("/deactive-editor", controllers.DeactiveEditorUser)
 		privateRouter.POST("/delete-user", controllers.DeleteUser)
+		privateRouter.POST("/delete-post", controllers.DeletePost)
 		privateRouter.GET("/editor-management", controllers.RenderEditorManagement)
 		privateRouter.GET("/render-create-post", controllers.RenderCreatePost)
+		privateRouter.GET("/render-update-post", controllers.RenderUpdatePost)
 	}
 	privateRouter.Use(controllers.AuthAdminRequired())
 }
