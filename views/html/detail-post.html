@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Detail post</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="/views/lib/bootstrap-3.3.0/dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.4.8/collection/icon/icon.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/views/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/views/css/skins/_all-skins.min.css">
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="/html/admin.html" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b></b>CMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Admin</b>CMS</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Notifications: style can be found in dropdown.less -->
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-warning">10</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header">You have 10 notifications</li>
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu">
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="footer"><a href="#">View all</a></li>
+                            </ul>
+                        </li>
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="/views/images/user-default-160x160.png" class="user-image" alt="User Image">
+                                <span class="hidden-xs">anhnt</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
+                                    <p>
+                                        anhnt - Web Developer
+                                        <small>Member since Nov. 2012</small>
+                                    </p>
+                                </li>
+                                <!-- Menu user-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- =============================================== -->
+
+        <!-- Left side column. contains the sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p>anhnt</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    </div>
+                </div>
+                <!-- search form -->
+                <form action="#" method="get" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li><a href="./admin.html"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
+
+                    <li class="active"><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
+                    <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- =============================================== -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Xem chi tiết
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="./admin.html"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li><a href="">Xem chi tiết</a></li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <form role="form">
+                    <!-- text input -->
+
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input disabled type="text" name="title" class="title form-control" id="title" value="{{.post.Title}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Chủ đề</label>
+                        <input disabled type="text" name="topic" class="topic form-control" id="topic" value="{{.post.Topic}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <input disabled type="text" name="description" class="description form-control" id="description" value="{{.post.Description}}">
+                    </div>
+                    <!-- textarea -->
+                    <div class="form-group">
+                        <label>Nội dung</label>
+                        <textarea disabled name="content" class="content-area form-control" id="content-area" rows="3">{{.post.Content}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <!-- <button type="button" class="btn-update-post btn btn-primary" id="update-{{.post.ID}}">Sửa bài{{.post.Content}}
+                            viết</button> -->
+                        <!-- <button id="btn-create-post" class="btn-create-post btn btn-primary">Tạo bài viết</button> -->
+
+
+
+                    </div>
+                </form>
+                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                    id="active-modal">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="labelActiveModal">Sửa bài viết này!</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="modal-btn-back-active">Trở lại</button>
+                                <button type="button" class="btn btn-primary" id="modal-btn-ok-active">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                    id="deactive-modal">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="labelDeactiveModal">Bỏ kích hoạt tài khoản này</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="modal-btn-back-deactive">Trở lại</button>
+                                <button type="button" class="btn btn-primary" id="modal-btn-ok-deactive">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                    id="delete-modal">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="labelDeleteModal">Xóa tài khoản này! </h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="modal-btn-back-delete">Trở lại</button>
+                                <button type="button" class="btn btn-primary" id="modal-btn-ok-delete">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                    id="notification-modal">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="labelNotiModel"></h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" id="modal-btn-ok-noti">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+
+        </div>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; 2019 <a href="https://adminlte.io">CMS</a>.</strong> All rights
+            reserved.
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery 3 -->
+    <script src="/views/lib/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="/views/lib/bootstrap-3.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="/views/lib/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <!-- <script src="/views/js/fastclick.js"></script> -->
+    <!-- AdminLTE App -->
+    <script src="/views/lib/adminlte.min.js"></script>
+    <!-- <script src="/views/js/editor-management.js"></script> -->
+    <script src="/views/js/update-post.js"></script>
+    <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
+    <script>
+        // Replace the <textarea id="editor1"> with a CKEditor
+        // instance, using default configuration.
+        CKEDITOR.replace('content-area');
+    </script>
+</body>
+
+</html>

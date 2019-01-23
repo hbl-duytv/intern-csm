@@ -54,7 +54,5 @@ modalConfirmActive(function (confirm) {
             },
 
         });
-    } else {
-
-    }
+    } 
 });
