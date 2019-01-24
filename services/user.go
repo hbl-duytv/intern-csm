@@ -32,14 +32,20 @@ func GetUserByID(id string) models.User {
 	DB.First(&user, id)
 	return user
 }
-func CreateUser(username string, password string, email string, status int, typeUser int) {
+func CreateUser(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int) {
 	passwordMD5 := helper.GetMD5Hash(password)
 	newUser := models.User{
-		Username: username,
-		Password: passwordMD5,
-		Email:    email,
-		Type:     typeUser,
-		Status:   status,
+		Username:    username,
+		Password:    passwordMD5,
+		Name:        name,
+		Gender:      gender,
+		PhoneNumber: phoneNumber,
+		Email:       email,
+		Type:        typeUser,
+		Status:      status,
 	}
 	DB.Save(&newUser)
+}
+func DeleteUser(user *models.User) {
+	DB.Delete(&user)
 }

@@ -24,7 +24,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Parameters can't be empty"})
 		return
 	}
-	// hash password to md5
 	passwordMD5 := helper.GetMD5Hash(password)
 	user := models.User{}
 	services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user)
@@ -42,16 +41,16 @@ func Login(c *gin.Context) {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", message)
 		}
 	} else {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusNotFound, "error": "Authentication failed"})
+		// c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusNotFound, "error": "Authentication failed"})
+		c.Redirect(301, "/login")
 	}
-
 }
 func RegisterSuccess(c *gin.Context) {
 	username := c.Param("username")
 	password := c.Param("password")
 	email := c.Param("email")
 	if username != "" && password != "" && email != "" {
-		services.CreateUser(username, password, email, 0, 0)
+		services.CreateUser(username, password, email, "", "", "", 0, 0, 0)
 		messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
 		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 	} else {
@@ -78,22 +77,21 @@ func Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("user")
 	if user == nil {
-		c.Redirect(301, "login")
+		c.Redirect(301, "/login")
 		return
 	}
 	session.Delete("user")
 	session.Save()
-	c.Redirect(301, "login")
+	c.Redirect(301, "/login")
 }
 func CheckUserExist(c *gin.Context) {
 	username := c.PostForm("username")
-	user := services.GetUserByID(username)
+	user := services.GetUserByUsername(username)
 	if user.ID == 0 {
 		c.JSON(http.StatusOK, gin.H{"check": true, "message": "Successfully check user"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "User exist!"})
-	return
 }
 func CheckEmailExist(c *gin.Context) {
 	email := c.PostForm("email")
@@ -103,7 +101,6 @@ func CheckEmailExist(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "Email exist!"})
-	return
 }
 func Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Login"})
