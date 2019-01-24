@@ -30,6 +30,7 @@ func InitRouter(router *gin.Engine) {
 	router.POST("/deactive-status-post", controllers.DeActiveStatusPost)
 	router.POST("/create-post", controllers.CreatePost)
 	router.POST("/update-content-post", controllers.UpdateContentPost)
+	router.GET("/comment/:postID", controllers.GetAllCommentByPostID)
 	privateRouter := router.Group("/")
 	{
 		privateRouter.POST("/active-editor", controllers.ActiveEditorUser)
