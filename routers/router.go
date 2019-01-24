@@ -4,13 +4,14 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/controllers"
+	"github.com/hbl-duytv/intern-csm/middleware"
 )
 
 func InitRouter(router *gin.Engine) {
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
-	router.GET("/", controllers.RenderIndex)
-	router.GET("/home", controllers.RenderHome)
+	router.GET("/", controllers.Index)
+	router.GET("/home", controllers.Home)
 	router.POST("/login", controllers.Login)
 	router.GET("/logout", controllers.Logout)
 	router.POST("/register", controllers.SendConfirmRegister)
@@ -18,11 +19,9 @@ func InitRouter(router *gin.Engine) {
 	router.POST("/check-email-exist", controllers.CheckEmailExist)
 	router.GET("/confirm-register/:username/:password/:email", controllers.RegisterSuccess)
 	router.POST("/confirm-user-after-register/:id", controllers.ConfirmUserAfterRegister)
-	// router.GET("/admin", controllers.GetAllUserNotActive)
 	privateRouter := router.Group("/api")
 	{
-		privateRouter.GET("/home")
 		privateRouter.GET("/posts")
 	}
-	privateRouter.Use(controllers.AuthRequired())
+	privateRouter.Use(middleware.AuthRequired())
 }
