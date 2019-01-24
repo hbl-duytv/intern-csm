@@ -106,7 +106,8 @@ func RenderDetailPost(c *gin.Context) {
 	idPost := c.Param("id")
 	var post models.Posts
 	services.DB.Find(&post, "id=?", idPost)
-	c.HTML(http.StatusOK, "detail-post.html", gin.H{"post": post})
+	// c.HTML(http.StatusOK, "detail-post.html", gin.H{"post": post})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "post": post})
 
 }
 func CreatePost(c *gin.Context) {

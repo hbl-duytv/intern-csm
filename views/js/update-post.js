@@ -4,14 +4,16 @@ $(document).ready(function () {
         location.reload()
     });
 })
+CKEDITOR.replace('content-area');
 var idPost, title, topic, description, content;
 var modalConfirmActive = function (callback) {
     $(".btn-update-post").on("click", function () {
         idPost = this.id.substring(this.id.indexOf("-") + 1)
         title = $('#title').val()
         topic = $('#topic').val()
-        description = $('#description').val()
-        content = $('.content-area').val()
+        description = $('#description').val();
+        content = CKEDITOR.instances['content-area'].getData();
+        // content = $('.content-area').val()
         $("#active-modal").modal('show');
     });
     $("#modal-btn-ok-active").on("click", function () {
@@ -52,8 +54,9 @@ modalConfirmActive(function (confirm) {
     }
 });
 function ResetValue() {
-    title = $('#title').val("")
-    topic = $('#topic').val("")
-    description = $('#description').val("")
-    content = $('.content-area').val("")
+    title = $('#title').val("");
+    topic = $('#topic').val("");
+    description = $('#description').val("");
+    CKEDITOR.instances['content-area'].setData("");
+    // content = $('.content-area').val("")
 }

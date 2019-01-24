@@ -10,7 +10,8 @@ import (
 )
 
 func GetCurrentUser(username string) models.TransformUser {
-	user := models.User{}
+	// user := models.User{}
+	var user models.User
 	services.DB.Find(&user, "username=?", username)
 	transformUSer := models.TransformUser{}
 	if user.ID != 0 {

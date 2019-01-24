@@ -327,6 +327,57 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBigModalLabel" aria-hidden="true"
+                    id="detail-post-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="labelActiveModal">Xem chi tiết</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="register-form">
+                                    <div class="form-group">
+                                        <label>Title</label>
+
+                                        <input disabled type="text" name="username" id="detail-title" tabindex="1"
+                                            class="form-control" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Topic</label>
+
+                                        <input disabled type="email" name="email" id="detail-topic" tabindex="1" class="form-control"
+                                            required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Descripiton</label>
+
+                                        <input disabled type="email" name="email" id="detail-description" tabindex="1"
+                                            class="form-control" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nội dung</label>
+                                        <textarea disabled name="content-area" class="content-area form-control" id="detail-content"
+                                            rows="3"></textarea>
+                                    </div>
+
+
+
+
+
+
+
+                                </form>
+                            </div>
+                            <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="modal-btn-back-create">Trở lại</button>
+                                <button type="button" class="btn btn-primary" id="modal-btn-ok-create">Thêm</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
             </section>
             <!-- /.content -->
         </div>
@@ -353,6 +404,7 @@
     <!-- Data tables -->
     <script src="/views/lib/data-tables/jquery.dataTables.min.js"></script>
     <!-- Handle js -->
+    <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
     <script src="/views/js/post-management.js"></script>
 </body>
 

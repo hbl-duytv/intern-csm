@@ -5,6 +5,7 @@ $(document).ready(function () {
     location.reload()
   });
 });
+
 var idPost
 var idDelete
 var idDeActive
@@ -119,10 +120,45 @@ modalDeActivePost(function (confirm) {
 $('.btn-update-post').click(function () {
   idPost = this.id.substring(this.id.indexOf("-") + 1)
   document.location.href = "/render-update-post/" + idPost;
+});
+
+var modalDetailPost = function (callback) {
+  $(".btn-detail-post").on("click", function () {
+    idPost = this.id.substring(this.id.indexOf("-") + 1)
+    $("#detail-post-modal").modal('show');
+    callback(true);
+  });
+
+};
+editor = CKEDITOR.replace('content-area');
+modalDetailPost(function (confirm) {
+  console.log("id" + idPost);
+  if (confirm) {
+    $.ajax({
+      type: 'get',
+      url: 'http://localhost:8000/render-detail-post/' + idPost,
+      dataType: 'json',
+
+      success: function (result) {
+        if (result.status == 200) {
+          
+          // console.log("data:", result.post);
+          // console.log("title", result.post["title"]);
+          $('#detail-title').val(result.post["title"]);
+          $('#detail-topic').val(result.post["topic"]);
+          $('#detail-description').val(result.post["description"]);
+          // console.log(result.post["content"]);
+          editor.setData(result.post["content"]);
+          
+        } else {
+
+        }
+      }
+    });
+  } else {
+
+  }
 })
-$('.btn-detail-post').click(function () {
-  idPost = this.id.substring(this.id.indexOf("-") + 1)
-  document.location.href = "/render-detail-post/" + idPost;
-})
+
 
 

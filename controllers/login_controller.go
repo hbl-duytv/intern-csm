@@ -1,14 +1,13 @@
 package controllers
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/models"
 	"github.com/hbl-duytv/intern-csm/services"
 )
@@ -45,7 +44,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	// hash password to md5
-	passwordMD5 := GetMD5Hash(password)
+	passwordMD5 := helper.GetMD5Hash(password)
 	currentUser := models.User{}
 	services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&currentUser)
 	if currentUser.ID != 0 {
@@ -72,7 +71,7 @@ func RegisterSuccess(c *gin.Context) {
 	username := c.Param("username")
 	password := c.Param("password")
 	email := c.Param("email")
-	passwordMD5 := GetMD5Hash(password)
+	passwordMD5 := helper.GetMD5Hash(password)
 	if username != "" && password != "" && email != "" {
 		newUser := models.User{}
 		services.DB.Where("username = ?", username).Find(&newUser)
@@ -107,18 +106,19 @@ func SendConfirmRegister(c *gin.Context) {
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"))
 }
 func GetAllUserNotActive(c *gin.Context) {
-	user := []models.User{}
-	transformUSer := []models.TransformUser{}
+	var user []models.User
+	// user := []models.User{}
+	// transformUSer := []models.TransformUser{}
 	services.DB.Find(&user, "status=?", 0)
 	if len(user) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No user need active!"})
 		return
 	}
-	for _, v := range user {
-		transformUSer = append(transformUSer,
-			models.TransformUser{v.ID, v.Username, v.Email, v.Name, v.Type, v.Gender, v.BirthDay, v.PhoneNumber, v.Status})
-	}
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": transformUSer})
+	// for _, v := range user {
+	// 	transformUSer = append(transformUSer,
+	// 		models.TransformUser{v.ID, v.Username, v.Email, v.Name, v.Type, v.Gender, v.BirthDay, v.PhoneNumber, v.Status})
+	// }
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": user})
 }
 func ConfirmUserAfterRegister(c *gin.Context) {
 	var user models.User
@@ -126,7 +126,7 @@ func ConfirmUserAfterRegister(c *gin.Context) {
 	services.DB.First(&user, idUser)
 	status := 1
 	services.DB.Model(&user).Update("status", status)
-	services.DB.Save(&user)
+	// services.DB.Save(&user)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 }
 func Logout(c *gin.Context) {
@@ -143,11 +143,7 @@ func Logout(c *gin.Context) {
 		// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Successfully logged out"})
 	}
 }
-func GetMD5Hash(text string) string {
-	hasher := md5.New()
-	hasher.Write([]byte(text))
-	return hex.EncodeToString(hasher.Sum(nil))
-}
+
 func GetUserNotACtive() []models.TransformUser {
 	user := []models.User{}
 	transformUSer := []models.TransformUser{}

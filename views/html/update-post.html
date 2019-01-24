@@ -166,7 +166,7 @@
                     <!-- textarea -->
                     <div class="form-group">
                         <label>Nội dung</label>
-                        <textarea name="content" class="content-area form-control" id="content-area" rows="3">{{.post.Content}}</textarea>
+                        <textarea name="content-area" class="content-area form-control" id="content-area" rows="3">{{.post.Content}}</textarea>
                     </div>
                     <div class="form-group">
                         <button type="button" class="btn-update-post btn btn-primary" id="update-{{.post.ID}}">Sửa bài
@@ -267,13 +267,14 @@
     <!-- AdminLTE App -->
     <script src="/views/lib/adminlte.min.js"></script>
     <!-- <script src="/views/js/editor-management.js"></script> -->
-    <script src="/views/js/update-post.js"></script>
     <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
-    <script>
+    <script src="/views/js/update-post.js"></script>
+   
+    <!-- <script>
         // Replace the <textarea id="editor1"> with a CKEditor
         // instance, using default configuration.
         CKEDITOR.replace('content-area');
-    </script>
+    </script> -->
 </body>
 
 </html>
