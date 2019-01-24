@@ -63,20 +63,6 @@ func GetUserByID(id int) (models.User, error) {
 	}
 	return user, nil
 }
-func CreateUser(username string, password string, email string, status int, typeUser int) error {
-	passwordMD5 := helper.GetMD5Hash(password)
-	newUser := models.User{
-		Username: username,
-		Password: passwordMD5,
-		Email:    email,
-		Type:     typeUser,
-		Status:   status,
-	}
-	if err := DB.Save(&newUser).Error; err != nil {
-		return err
-	}
-	return nil
-}
 func DeleteUser(id int) error {
 	var user models.User
 	if err := DB.First(&user, id).Error; err != nil {

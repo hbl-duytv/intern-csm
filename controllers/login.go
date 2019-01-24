@@ -122,7 +122,6 @@ func CheckUserExist(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "User exist!"})
-	return
 }
 func CheckEmailExist(c *gin.Context) {
 	email := c.PostForm("email")
@@ -132,7 +131,6 @@ func CheckEmailExist(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "Email exist!"})
-	return
 }
 
 func Index(c *gin.Context) {
