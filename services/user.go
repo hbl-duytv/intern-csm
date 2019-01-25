@@ -24,6 +24,11 @@ func GetUserByEmail(email string) models.User {
 	DB.Find(&user, "email=?", email)
 	return user
 }
+func GetUserByToken(token string) models.User {
+	var user models.User
+	DB.Find(&user, "token=?", token)
+	return user
+}
 func UpdateStatusUser(status int, user *models.User) {
 	DB.Model(&user).Update("status", status)
 }
@@ -32,7 +37,7 @@ func GetUserByID(id string) models.User {
 	DB.First(&user, id)
 	return user
 }
-func CreateUser(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int) {
+func CreateUser(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int, token string, confirm int) {
 	passwordMD5 := helper.GetMD5Hash(password)
 	newUser := models.User{
 		Username:    username,
@@ -43,9 +48,14 @@ func CreateUser(username string, password string, email string, name string, gen
 		Email:       email,
 		Type:        typeUser,
 		Status:      status,
+		Token:       token,
+		Confirm:     confirm,
 	}
 	DB.Save(&newUser)
 }
 func DeleteUser(user *models.User) {
 	DB.Delete(&user)
+}
+func ConfirmRegisterUser(user *models.User) {
+	DB.Model(&user).Update("confirm", 1)
 }

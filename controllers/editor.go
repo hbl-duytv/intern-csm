@@ -6,14 +6,14 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/models"
 	"github.com/hbl-duytv/intern-csm/services"
 )
 
 func ActiveEditorUser(c *gin.Context) {
-	var user models.User
 	idUser := c.PostForm("id")
-	services.GetUserByID(idUser)
+	user := services.GetUserByID(idUser)
 	if user.ID != 0 {
 		services.UpdateStatusUser(1, &user)
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
@@ -22,9 +22,8 @@ func ActiveEditorUser(c *gin.Context) {
 	}
 }
 func DeactiveEditorUser(c *gin.Context) {
-	var user models.User
 	idUser := c.PostForm("id")
-	services.DB.First(&user, idUser)
+	user := services.GetUserByID(idUser)
 	if user.ID != 0 {
 		services.UpdateStatusUser(0, &user)
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
@@ -51,12 +50,13 @@ func CreateUser(c *gin.Context) {
 	name := c.PostForm("name")
 	gender := c.PostForm("gender")
 	birthday := c.PostForm("birthday")
+	token := helper.GetToken(username)
 	if phoneNumber, error := strconv.Atoi(c.PostForm("phone_number")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Phone number error!"})
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
-		services.CreateUser(username, password, email, name, gender, birthday, phoneNumber, status, 0)
+		services.CreateUser(username, password, email, name, gender, birthday, phoneNumber, status, 0, token, 1)
 		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
 	}
 }

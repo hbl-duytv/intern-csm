@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/services"
 
 	"github.com/gin-gonic/contrib/sessions"
@@ -18,4 +19,9 @@ func Home(c *gin.Context) {
 	} else {
 		c.Redirect(301, "/login")
 	}
+}
+func GetToken(c *gin.Context) {
+	token := c.Param("token")
+	result := helper.GetToken(token)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": result})
 }

@@ -19,7 +19,6 @@ func Login(c *gin.Context) {
 	session := sessions.Default(c)
 	username := c.PostForm("username")
 	password := c.PostForm("password")
-
 	if strings.Trim(username, " ") == "" || strings.Trim(password, " ") == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Parameters can't be empty"})
 		return
@@ -30,39 +29,43 @@ func Login(c *gin.Context) {
 	if user.ID != 0 {
 		session.Set("user", username)
 		err := session.Save()
+		// c.JSON(http.StatusUnauthorized, gin.H{"error": session.Get("mysession")})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})
 			return
 		}
-		if user.Status == UserActived {
+		if user.Status == UserActived && user.Confirm == 1 {
 			c.Redirect(301, "/home")
-		} else {
-			message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
-			c.Data(http.StatusOK, "text/html; charset=utf-8", message)
+			return
 		}
+		message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
+		c.Data(http.StatusOK, "text/html; charset=utf-8", message)
 	} else {
 		// c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusNotFound, "error": "Authentication failed"})
 		c.Redirect(301, "/login")
 	}
 }
 func RegisterSuccess(c *gin.Context) {
-	username := c.Param("username")
-	password := c.Param("password")
-	email := c.Param("email")
-	if username != "" && password != "" && email != "" {
-		services.CreateUser(username, password, email, "", "", "", 0, 0, 0)
-		messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
-		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
-	} else {
-		messageFail := []byte("Xác nhận tài khoản thất bại, vui lòng thử lại!")
-		c.Data(http.StatusOK, "text/html; charset=utf-8", messageFail)
+	token := c.Param("token")
+	if token != "" {
+		user := services.GetUserByToken(token)
+		services.ConfirmRegisterUser(&user)
+		if user.Confirm == 1 {
+			messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
+			c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
+			return
+		}
 	}
+	messageFail := []byte("Xác nhận tài khoản thất bại, vui lòng thử lại!")
+	c.Data(http.StatusOK, "text/html; charset=utf-8", messageFail)
 }
 func SendConfirmRegister(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 	email := c.PostForm("email")
-	urlConfirm := "http://localhost:8000/confirm-register/" + username + "/" + password + "/" + email
+	token := helper.GetToken(username)
+	urlConfirm := "http://localhost:8000/confirm-register/" + token
+	services.CreateUser(username, password, email, "", "", "", 0, 0, 0, token, 0)
 	massageEmailConfirm := "<div>Bạn đã đăng ký tài khoản biên tập viên, vui lòng xác nhận :</div><button><a href=\"" + urlConfirm + "\">Xác nhận đăng ký</a></button>"
 	SendMail(email, massageEmailConfirm)
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"))
