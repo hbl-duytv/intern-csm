@@ -14,7 +14,7 @@ var SessionName interface{}
 
 func GetAllEditorUser() ([]models.User, error) {
 	var users []models.User
-	if err := DB.Debug().Where("type=? AND confirm=?", constant.DeactiveNumber, constant.ActiveNumber).Find(&users).Error; err != nil {
+	if err := DB.Debug().Where("type=? AND confirm=?", constant.DeactiveNumber, constant.UserConfirmed).Find(&users).Error; err != nil {
 		return users, err
 	}
 	return users, nil
