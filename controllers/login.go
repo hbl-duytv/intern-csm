@@ -49,9 +49,14 @@ func RegisterSuccess(c *gin.Context) {
 	token := c.Param("token")
 	if token != "" {
 		user := services.GetUserByToken(token)
-		services.ConfirmRegisterUser(&user)
-		if user.Confirm == 1 {
-			messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
+		if user.ID != 0 {
+			if user.Confirm == 0 {
+				services.ConfirmRegisterUser(&user)
+				messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
+				c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
+				return
+			}
+			messageSuccess := []byte("Tài khoản đã được xác nhận, vui lòng đợi kích hoạt từ người quản trị!")
 			c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 			return
 		}
