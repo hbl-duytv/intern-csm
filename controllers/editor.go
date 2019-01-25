@@ -43,7 +43,6 @@ func DeleteUser(c *gin.Context) {
 }
 func CreateUser(c *gin.Context) {
 	username := c.PostForm("username")
-	password := c.PostForm("password")
 	email := c.PostForm("email")
 	name := c.PostForm("name")
 	gender := c.PostForm("gender")
@@ -54,7 +53,7 @@ func CreateUser(c *gin.Context) {
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
-		services.CreateUser(username, password, email, name, gender, birthday, phoneNumber, status, 0, token, 1)
+		services.CreateUser(username, "123456", email, name, gender, birthday, phoneNumber, status, 0, token, 1)
 		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
 	}
 }

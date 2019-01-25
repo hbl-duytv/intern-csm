@@ -140,23 +140,20 @@ var modalCreateEditor = function(callback){
 }; 
 modalCreateEditor(function(confirm){
   var usernameRegister = $("#usernameRegister").val()
-  var passwordRegister = $("#passwordRegister").val()
+  // var passwordRegister = $("#passwordRegister").val()
   var emailRegister = $("#emailRegister").val()
-  var confirmPasswordRegister = $("#confirmPasswordRegister").val()
+  // var confirmPasswordRegister = $("#confirmPasswordRegister").val()
   var nameRegister = $("#nameRegister").val()
   var genderRegister = $("#genderRegister").val()
   var birthdayRegister = $("#birthdayRegister").val()
   var phoneNumberRegister = $("#phoneNumberRegister").val()
   var statusRegister = $("#statusRegister").val()
-  if (passwordRegister !== confirmPasswordRegister) {
-    $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
-  }else if(confirm){
+  if(confirm){
       $.ajax({
       type:'post',
       url:'http://localhost:8000/create-user',
       data:{
         'username': usernameRegister,
-        'password': passwordRegister,
         'email': emailRegister,
         'name': nameRegister,
         'gender': genderRegister,
@@ -174,22 +171,22 @@ modalCreateEditor(function(confirm){
           $("#notification-modal").modal('show');
         }
       }
-  });
+    });
   }
 });
-$("#confirmPasswordRegister").focusout(function(){
-  var passwordRegister = $("#passwordRegister").val()
-  var confirmPasswordRegister = $("#confirmPasswordRegister").val()
-  if (passwordRegister !== confirmPasswordRegister) {
-    $('#messageConfirmPass').css('color', 'red');
-    $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
-    $('#modal-btn-ok-create').attr('disabled','disabled');
-  }else {
-    $('#messageConfirmPass').css('color', 'green');
-    $("#messageConfirmPass").text('');
-    $('#modal-btn-ok-create').removeAttr('disabled');
-  }
-});
+// $("#confirmPasswordRegister").focusout(function(){
+//   var passwordRegister = $("#passwordRegister").val()
+//   var confirmPasswordRegister = $("#confirmPasswordRegister").val()
+//   if (passwordRegister !== confirmPasswordRegister) {
+//     $('#messageConfirmPass').css('color', 'red');
+//     $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
+//     $('#modal-btn-ok-create').attr('disabled','disabled');
+//   }else {
+//     $('#messageConfirmPass').css('color', 'green');
+//     $("#messageConfirmPass").text('');
+//     $('#modal-btn-ok-create').removeAttr('disabled');
+//   }
+// });
 $("#usernameRegister").focusout(function() {
   let username = $("#usernameRegister").val()
   checkUserExist(username, function(result){
@@ -215,5 +212,5 @@ $("#emailRegister").focusout(function() {
       $('#messageEmail').hide();
       $('#modal-btn-ok-create').removeAttr('disabled');
     }
-  })
+  });
 });
