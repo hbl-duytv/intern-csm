@@ -40,7 +40,6 @@ $(function () {
 			}
 		})
 	});
-
 });
 $(document).ready(function () {
 	vadidateRegister('register-form');

@@ -4,38 +4,57 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/hbl-duytv/intern-csm/models"
-
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/hbl-duytv/intern-csm/constant"
 	"github.com/hbl-duytv/intern-csm/helper"
+	"github.com/hbl-duytv/intern-csm/models"
 	"github.com/hbl-duytv/intern-csm/services"
 )
 
-func ActiveEditorUser(c *gin.Context) {
+func GetAllEditorUser() []models.User {
 
-	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.UpdateStatusUser(idUser, constant.ActiveNumber) == nil {
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
-		return
+	var users []models.User
+	services.DB.Find(&users, "type=?", 0)
+	if len(users) == 0 {
+		return nil
 	}
-	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
+	return users
+}
+func ActiveEditorUser(c *gin.Context) {
+	var user models.User
+	idUser := c.PostForm("id")
+	services.DB.First(&user, idUser)
+	if user.ID != 0 {
+		services.DB.Model(&user).Update("status", 1)
+		services.DB.Save(&user)
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
+	}
 }
 func DeactiveEditorUser(c *gin.Context) {
-	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.UpdateStatusUser(idUser, constant.TypeEditor) == nil {
+	var user models.User
+	idUser := c.PostForm("id")
+	services.DB.First(&user, idUser)
+	if user.ID != 0 {
+		services.DB.Model(&user).Update("status", 0)
+		services.DB.Save(&user)
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
-		return
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
 	}
-	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
 }
 func DeleteUser(c *gin.Context) {
-	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.DeleteUser(idUser) == nil {
+	var user models.User
+	idUser := c.PostForm("id")
+	services.DB.First(&user, idUser)
+	if user.ID != 0 {
+		services.DB.Delete(&user)
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete user successfully!"})
-		return
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Delete user fail!"})
 	}
-	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Delete user fail!"})
+
 }
 func CreateUser(c *gin.Context) {
 	username := c.PostForm("username")
@@ -44,10 +63,8 @@ func CreateUser(c *gin.Context) {
 	name := c.PostForm("name")
 	gender := c.PostForm("gender")
 	birthday := c.PostForm("birthday")
-	token := helper.GetToken(username)
 	if phoneNumber, error := strconv.Atoi(c.PostForm("phone_number")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Phone number error!"})
-
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
@@ -57,38 +74,25 @@ func CreateUser(c *gin.Context) {
 			Email:       email,
 			Name:        name,
 			Gender:      gender,
-			Birthday:    birthday,
+			BirthDay:    birthday,
 			PhoneNumber: phoneNumber,
+			Type:        0,
 			Status:      status,
-			Type:        constant.TypeEditor,
-			Token:       token,
-			Confirm:     constant.DeactiveNumber,
 		}
-		if services.CreateAccount(&newUser) == nil {
-			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User create success!"})
-
+		services.DB.Create(&newUser)
+		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
 	}
 }
 
 func RenderEditorManagement(c *gin.Context) {
-
-	editors, err := services.GetAllEditorUser()
-	if err != nil {
-		c.Redirect(http.StatusMovedPermanently, "/home")
-		return
-	}
-	username := services.GetCurrentUser(c)
+	editors := GetAllEditorUser()
+	session := sessions.Default(c)
+	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
-		if user, err := services.GetUserByUsername(usernameString); err == nil {
-
-			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
-			return
-		}
-
+		currentUser := GetCurrentUser(usernameString)
+		c.HTML(http.StatusOK, "editor-management.html", gin.H{"editors": editors, "currentUser": currentUser})
+	} else {
+		c.Redirect(301, "/home")
 	}
-	c.Redirect(http.StatusMovedPermanently, "/home")
-
+	c.Redirect(301, "/home")
 }

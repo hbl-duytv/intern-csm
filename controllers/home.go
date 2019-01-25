@@ -31,3 +31,9 @@ func Home(c *gin.Context) {
 	}
 	c.Redirect(301, "/login")
 }
+
+// func Home1(c *gin.Context) {
+// 	fmt.Println("render home 1")
+// 	c.HTML(http.StatusOK, "create-post-1.html", gin.H{"status": http.StatusOK, "title": "Test"})
+
+// }
