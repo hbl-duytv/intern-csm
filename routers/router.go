@@ -8,7 +8,6 @@ import (
 )
 
 func InitRouter(router *gin.Engine) {
-	// authMiddleware, _ := jwt.New(middleware.GinJwtMiddlewareHandler())
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.GET("/", controllers.Index)
