@@ -7,3 +7,4 @@ const TypeAdmin int = 1
 const TypeEditor int = 0
 const UserConfirmed int = 1
 const UserNotConfirmed int = 0
+const PasswordUserDefault = "123456"

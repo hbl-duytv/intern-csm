@@ -39,7 +39,6 @@ func DeleteUser(c *gin.Context) {
 }
 func CreateUser(c *gin.Context) {
 	username := c.PostForm("username")
-	password := c.PostForm("password")
 	email := c.PostForm("email")
 	name := c.PostForm("name")
 	gender := c.PostForm("gender")
@@ -53,7 +52,7 @@ func CreateUser(c *gin.Context) {
 	} else {
 		newUser := models.User{
 			Username:    username,
-			Password:    helper.GetMD5Hash(password),
+			Password:    helper.GetMD5Hash(constant.PasswordUserDefault),
 			Email:       email,
 			Name:        name,
 			Gender:      gender,
