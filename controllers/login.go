@@ -13,6 +13,8 @@ import (
 
 const UserActived = 1
 const UserDeactived = 0
+const UserConfirmed = 1
+const UserNotConfirmed = 0
 
 func Login(c *gin.Context) {
 
@@ -29,7 +31,6 @@ func Login(c *gin.Context) {
 	if user.ID != 0 {
 		session.Set("user", username)
 		err := session.Save()
-		// c.JSON(http.StatusUnauthorized, gin.H{"error": session.Get("mysession")})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})
 			return
@@ -41,7 +42,6 @@ func Login(c *gin.Context) {
 		message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
 		c.Data(http.StatusOK, "text/html; charset=utf-8", message)
 	} else {
-		// c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusNotFound, "error": "Authentication failed"})
 		c.Redirect(301, "/login")
 	}
 }
@@ -50,7 +50,7 @@ func RegisterSuccess(c *gin.Context) {
 	if token != "" {
 		user := services.GetUserByToken(token)
 		if user.ID != 0 {
-			if user.Confirm == 0 {
+			if user.Confirm == UserConfirmed {
 				services.ConfirmRegisterUser(&user)
 				messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
 				c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
@@ -74,12 +74,6 @@ func SendConfirmRegister(c *gin.Context) {
 	massageEmailConfirm := "<div>Bạn đã đăng ký tài khoản biên tập viên, vui lòng xác nhận :</div><button><a href=\"" + urlConfirm + "\">Xác nhận đăng ký</a></button>"
 	SendMail(email, massageEmailConfirm)
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"))
-}
-func ConfirmUserAfterRegister(c *gin.Context) {
-	idUser := c.Param("id")
-	user := services.GetUserByID(idUser)
-	services.UpdateStatusUser(1, &user)
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 }
 func Logout(c *gin.Context) {
 	session := sessions.Default(c)
