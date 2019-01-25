@@ -10,7 +10,7 @@ type User struct {
 	Name        string    `json:"name"`
 	Type        int       `json:"type"`
 	Gender      string    `json:"gender"`
-	BirthDay    string    `json:"birthday"`
+	Birthday    string    `json:"birthday"`
 	PhoneNumber int       `json:"phone_number"`
 	Status      int       `json:"status"`
 	Token       string    `json:"token"`
