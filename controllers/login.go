@@ -27,11 +27,12 @@ func Login(c *gin.Context) {
 		session.Set("user", username)
 		// services.SessionName = session.Get("user")
 		err := session.Save()
+		// c.JSON(http.StatusUnauthorized, gin.H{"error": session.Get("mysession")})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})
 			return
 		}
-		if user.Status == constant.ActiveNumber {
+		if user.Status == constant.ActiveNumber && user.Confirm == constant.UserConfirmed {
 			c.Redirect(http.StatusMovedPermanently, "/home")
 			return
 		}
@@ -59,6 +60,8 @@ func RegisterSuccess(c *gin.Context) {
 		}
 		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 	}
+	messageFail := []byte("Xác nhận tài khoản thất bại, vui lòng thử lại!")
+	c.Data(http.StatusOK, "text/html; charset=utf-8", messageFail)
 }
 
 func SendConfirmRegister(c *gin.Context) {

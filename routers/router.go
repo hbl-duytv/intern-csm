@@ -8,6 +8,7 @@ import (
 )
 
 func InitRouter(router *gin.Engine) {
+	// authMiddleware, _ := jwt.New(middleware.GinJwtMiddlewareHandler())
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.GET("/", controllers.Index)
@@ -22,7 +23,6 @@ func InitRouter(router *gin.Engine) {
 	router.POST("/register", controllers.SendConfirmRegister)
 	router.POST("/check-user-exist", controllers.CheckUserExist)
 	router.POST("/check-email-exist", controllers.CheckEmailExist)
-
 	router.POST("/confirm-user-after-register/:id", controllers.ConfirmUserAfterRegister)
 	router.POST("/login", controllers.Login)
 	router.POST("/active-status-post", controllers.ActiveStatusPost)

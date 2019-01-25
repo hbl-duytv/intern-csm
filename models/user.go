@@ -13,8 +13,8 @@ type User struct {
 	Birthday    string    `json:"birthday"`
 	PhoneNumber int       `json:"phone_number"`
 	Status      int       `json:"status"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"update_at"`
 	Token       string    `json:"token"`
 	Confirm     int       `json:"confirm"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"update_at"`
 }
