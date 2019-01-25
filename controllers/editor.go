@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/helper"
-	"github.com/hbl-duytv/intern-csm/models"
 	"github.com/hbl-duytv/intern-csm/services"
 )
 
@@ -32,9 +31,8 @@ func DeactiveEditorUser(c *gin.Context) {
 	}
 }
 func DeleteUser(c *gin.Context) {
-	var user models.User
 	idUser := c.PostForm("id")
-	services.GetUserByID(idUser)
+	user := services.GetUserByID(idUser)
 	if user.ID != 0 {
 		services.DeleteUser(&user)
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete user successfully!"})

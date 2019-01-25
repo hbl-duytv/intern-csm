@@ -1,13 +1,15 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/models"
 )
 
 func GetAllEditorUser() []models.User {
 	var users []models.User
-	DB.Find(&users, "type=?", 0)
+	DB.Find(&users, "type=? AND confirm=?", 0, 1)
 	if len(users) == 0 {
 		return nil
 	} else {
@@ -39,11 +41,13 @@ func GetUserByID(id string) models.User {
 }
 func CreateUser(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int, token string, confirm int) {
 	passwordMD5 := helper.GetMD5Hash(password)
+	fmt.Println(birthday)
 	newUser := models.User{
 		Username:    username,
 		Password:    passwordMD5,
 		Name:        name,
 		Gender:      gender,
+		Birthday:    birthday,
 		PhoneNumber: phoneNumber,
 		Email:       email,
 		Type:        typeUser,
