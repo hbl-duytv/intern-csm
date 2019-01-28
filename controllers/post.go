@@ -17,7 +17,7 @@ func RenderPostManagementAdmin(c *gin.Context) {
 	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
 		user := GetCurrentUser(usernameString)
-		c.HTML(http.StatusOK, "post-management.html", gin.H{"user": user, "transformPost": services.GetPostWithAdminPermission()})
+		c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "transformPost": services.GetPostWithAdminPermission(), "index": 2, "title": "Post - Management"})
 	} else {
 		c.Redirect(301, "/home")
 	}
@@ -29,7 +29,7 @@ func RenderPostManagementEditor(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
 	user := GetCurrentUser(username.(string))
-	c.HTML(http.StatusOK, "post-management.html", gin.H{"user": user, "transformPost": services.GetPostWithEditorPermission(user.ID)})
+	c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "transformPost": services.GetPostWithEditorPermission(user.ID), "index": 2, "title": "Post - Management"})
 
 }
 func RenderCreatePost(c *gin.Context) {
@@ -38,14 +38,14 @@ func RenderCreatePost(c *gin.Context) {
 	username := session.Get("user")
 	user := GetCurrentUser(username.(string))
 
-	c.HTML(http.StatusOK, "create-post.html", gin.H{"user": user})
+	c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "index": 0, "title": "Create Post"})
 }
 
 func RenderUpdatePost(c *gin.Context) {
 	idPost, _ := strconv.Atoi(c.Param("id"))
 	// var post models.Post
 	// services.DB.Find(&post, "id=?", idPost)
-	c.HTML(http.StatusOK, "update-post.html", gin.H{"post": services.GetPostById(idPost)})
+	c.HTML(http.StatusOK, "master.html", gin.H{"post": services.GetPostById(idPost), "index": 3, "title": "Update Post"})
 
 }
 func RenderDetailPost(c *gin.Context) {

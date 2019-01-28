@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -85,12 +86,13 @@ func CreateUser(c *gin.Context) {
 }
 
 func RenderEditorManagement(c *gin.Context) {
+	fmt.Println("home0")
 	editors := GetAllEditorUser()
 	session := sessions.Default(c)
 	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
 		currentUser := GetCurrentUser(usernameString)
-		c.HTML(http.StatusOK, "editor-management.html", gin.H{"editors": editors, "currentUser": currentUser})
+		c.HTML(http.StatusOK, "master.html", gin.H{"editors": editors, "currentUser": currentUser, "index": 1, "title": "Editor management"})
 	} else {
 		c.Redirect(301, "/home")
 	}

@@ -25,7 +25,7 @@ func Home(c *gin.Context) {
 	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
 		user := GetCurrentUser(usernameString)
-		c.HTML(http.StatusOK, "home.html", gin.H{"user": user})
+		c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "index": -1, "title": "Home"})
 	} else {
 		c.Redirect(301, "/login")
 	}
