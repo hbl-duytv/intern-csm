@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/hbl-duytv/intern-csm/constant"
 	"github.com/hbl-duytv/intern-csm/services"
 
 	"github.com/gin-gonic/contrib/sessions"
@@ -29,8 +30,8 @@ func AuthAdminRequired() gin.HandlerFunc {
 		if username == nil {
 			c.Redirect(301, "login")
 		} else if usernameString, ok := username.(string); ok {
-			user := services.GetUserByUsername(usernameString)
-			if user.Type == 1 {
+			user, _ := services.GetUserByUsername(usernameString)
+			if user.Type == constant.ACTIVE_NUMBER {
 				c.Next()
 			} else {
 				c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})

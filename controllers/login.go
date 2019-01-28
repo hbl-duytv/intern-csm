@@ -2,17 +2,14 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/hbl-duytv/intern-csm/helper"
-	"github.com/hbl-duytv/intern-csm/models"
+	"github.com/hbl-duytv/intern-csm/constant"
 	"github.com/hbl-duytv/intern-csm/services"
 )
-
-const UserActived = 1
-const UserDeactived = 0
 
 func Login(c *gin.Context) {
 
@@ -25,9 +22,10 @@ func Login(c *gin.Context) {
 		return
 	}
 	// hash password to md5
-	passwordMD5 := helper.GetMD5Hash(password)
-	user := models.User{}
-	services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user)
+	// passwordMD5 := helper.GetMD5Hash(password)
+	// user := models.User{}
+	// services.DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user)
+	user, _ := services.RequireLogin(username, password)
 	if user.ID != 0 {
 		session.Set("user", username)
 		err := session.Save()
@@ -35,7 +33,7 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})
 			return
 		}
-		if user.Status == UserActived {
+		if user.Status == constant.ACTIVE_NUMBER {
 			c.Redirect(301, "/home")
 		} else {
 			message := []byte("Tài khoản chưa được kích hoạt, vui lòng đợi kích hoạt từ người quản trị!")
@@ -51,7 +49,7 @@ func RegisterSuccess(c *gin.Context) {
 	password := c.Param("password")
 	email := c.Param("email")
 	if username != "" && password != "" && email != "" {
-		services.CreateUser(username, password, email, 0, 0)
+		services.CreateUser(username, password, email, constant.DEACTIVE_NUMBER, constant.DEACTIVE_NUMBER)
 		messageSuccess := []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
 		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 	} else {
@@ -65,14 +63,18 @@ func SendConfirmRegister(c *gin.Context) {
 	email := c.PostForm("email")
 	urlConfirm := "http://localhost:8000/confirm-register/" + username + "/" + password + "/" + email
 	massageEmailConfirm := "<div>Bạn đã đăng ký tài khoản biên tập viên, vui lòng xác nhận :</div><button><a href=\"" + urlConfirm + "\">Xác nhận đăng ký</a></button>"
-	SendMail(email, massageEmailConfirm)
+	services.SendMail(email, massageEmailConfirm)
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"))
 }
 func ConfirmUserAfterRegister(c *gin.Context) {
-	idUser := c.Param("id")
-	user := services.GetUserByID(idUser)
-	services.UpdateStatusUser(1, &user)
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
+	idUser, _ := strconv.Atoi(c.Param("id"))
+	// user, _ := services.GetUserByID(idUser)
+	if services.UpdateStatusUser(idUser, constant.ACTIVE_NUMBER) == nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
+	} else {
+
+	}
+
 }
 func Logout(c *gin.Context) {
 	session := sessions.Default(c)
@@ -87,8 +89,8 @@ func Logout(c *gin.Context) {
 }
 func CheckUserExist(c *gin.Context) {
 	username := c.PostForm("username")
-	user := services.GetUserByID(username)
-	if user.ID == 0 {
+	user, _ := services.GetUserByUsername(username)
+	if user.ID == constant.DEACTIVE_NUMBER {
 		c.JSON(http.StatusOK, gin.H{"check": true, "message": "Successfully check user"})
 		return
 	}
@@ -97,8 +99,8 @@ func CheckUserExist(c *gin.Context) {
 }
 func CheckEmailExist(c *gin.Context) {
 	email := c.PostForm("email")
-	user := services.GetUserByEmail(email)
-	if user.ID == 0 {
+	user, _ := services.GetUserByEmail(email)
+	if user.ID == constant.DEACTIVE_NUMBER {
 		c.JSON(http.StatusOK, gin.H{"check": true, "message": "Successfully check email"})
 		return
 	}

@@ -11,17 +11,36 @@ func InitRouter(router *gin.Engine) {
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.GET("/", controllers.Index)
+	router.GET("/login", controllers.Index)
 	router.GET("/home", controllers.Home)
-	router.POST("/login", controllers.Login)
+	router.GET("/editor-management2", controllers.RenderEditorManagement)
+
+	router.GET("/confirm-register/:username/:password/:email", controllers.RegisterSuccess)
 	router.GET("/logout", controllers.Logout)
+	router.GET("/get-post-admin-permission", controllers.RenderPostManagementAdmin)
+	router.GET("/get-post-editor-permission", controllers.RenderPostManagementEditor)
+	// post api router
 	router.POST("/register", controllers.SendConfirmRegister)
 	router.POST("/check-user-exist", controllers.CheckUserExist)
 	router.POST("/check-email-exist", controllers.CheckEmailExist)
-	router.GET("/confirm-register/:username/:password/:email", controllers.RegisterSuccess)
+
 	router.POST("/confirm-user-after-register/:id", controllers.ConfirmUserAfterRegister)
-	privateRouter := router.Group("/api")
+	router.POST("/login", controllers.Login)
+	router.POST("/active-status-post", controllers.ActiveStatusPost)
+	router.POST("/deactive-status-post", controllers.DeActiveStatusPost)
+	router.POST("/create-post", controllers.CreatePost)
+	router.POST("/update-content-post", controllers.UpdateContentPost)
+
+	privateRouter := router.Group("/")
 	{
-		privateRouter.GET("/posts")
+		privateRouter.POST("/active-editor", controllers.ActiveEditorUser)
+		privateRouter.POST("/deactive-editor", controllers.DeactiveEditorUser)
+		privateRouter.POST("/delete-user", controllers.DeleteUser)
+		privateRouter.POST("/delete-post", controllers.DeletePost)
+		// privateRouter.GET("/editor-management", controllers.RenderEditorManagement)
+		privateRouter.GET("/render-create-post", controllers.RenderCreatePost)
+		privateRouter.GET("/render-update-post/:id", controllers.RenderUpdatePost)
+		privateRouter.GET("/render-detail-post/:id", controllers.RenderDetailPost)
 	}
-	privateRouter.Use(middleware.AuthRequired())
+	privateRouter.Use(middleware.AuthAdminRequired())
 }
