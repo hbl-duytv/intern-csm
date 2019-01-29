@@ -29,14 +29,14 @@ func AuthAdminRequired() gin.HandlerFunc {
 		if username == nil {
 			c.Redirect(301, "login")
 		} else if usernameString, ok := username.(string); ok {
-			user := services.GetUserByUsername(usernameString)
-			if user.Type == 1 {
+			user, err := services.GetUserByUsername(usernameString)
+			if err == nil && user.Type == 1 {
 				c.Next()
-			} else {
-				c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})
+				return
 			}
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
+			c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})
+			return
 		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
 	}
 }

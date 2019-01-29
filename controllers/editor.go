@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,34 +13,33 @@ import (
 
 func ActiveEditorUser(c *gin.Context) {
 	idUser := c.PostForm("id")
-	user := services.GetUserByID(idUser)
-	if user.ID != 0 {
-		services.UpdateStatusUser(1, &user)
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
-	} else {
+	user, err := services.GetUserByID(idUser)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
+		return
 	}
+	services.UpdateStatusUser(1, &user)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 }
 func DeactiveEditorUser(c *gin.Context) {
 	idUser := c.PostForm("id")
-	user := services.GetUserByID(idUser)
-	if user.ID != 0 {
-		services.UpdateStatusUser(0, &user)
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
-	} else {
+	user, err := services.GetUserByID(idUser)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
+		return
 	}
+	services.UpdateStatusUser(0, &user)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 }
 func DeleteUser(c *gin.Context) {
 	idUser := c.PostForm("id")
-	user := services.GetUserByID(idUser)
-	if user.ID != 0 {
-		services.DeleteUser(&user)
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete user successfully!"})
-	} else {
+	user, err := services.GetUserByID(idUser)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Delete user fail!"})
+		return
 	}
-
+	services.DeleteUser(&user)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete user successfully!"})
 }
 func CreateUser(c *gin.Context) {
 	username := c.PostForm("username")
@@ -58,14 +58,18 @@ func CreateUser(c *gin.Context) {
 	}
 }
 func EditorManagement(c *gin.Context) {
-	editors := services.GetAllEditorUser()
+	editors, error := services.GetAllEditorUser()
+	if error != nil {
+		fmt.Print(error)
+		return
+	}
 	session := sessions.Default(c)
 	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
-		currentUser := services.GetUserByUsername(usernameString)
-		c.HTML(http.StatusOK, "editor-management.html", gin.H{"editors": editors, "currentUser": currentUser})
-	} else {
-		c.Redirect(301, "/home")
+		if currentUser, err := services.GetUserByUsername(usernameString); err == nil {
+			c.HTML(http.StatusOK, "editor-management.html", gin.H{"editors": editors, "currentUser": currentUser})
+			return
+		}
 	}
 	c.Redirect(301, "/home")
 }

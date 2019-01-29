@@ -13,13 +13,16 @@ func InitRouter(router *gin.Engine) {
 	router.GET("/", controllers.Index)
 	router.GET("/login", controllers.Index)
 	router.GET("/home", controllers.Home)
-	router.POST("/login", controllers.Login)
+	router.GET("/blog", controllers.Blog)
+	router.GET("/blog/:postID", controllers.BlogDetailPost)
 	router.GET("/logout", controllers.Logout)
+	router.GET("/confirm-register/:token", controllers.RegisterSuccess)
+	router.GET("/total-page", controllers.GetTotalNumberAllPost)
 	//post api router
 	router.POST("/register", controllers.SendConfirmRegister)
 	router.POST("/check-user-exist", controllers.CheckUserExist)
 	router.POST("/check-email-exist", controllers.CheckEmailExist)
-	router.GET("/confirm-register/:token", controllers.RegisterSuccess)
+	router.POST("/login", controllers.Login)
 	privateRouter := router.Group("/")
 	{
 		privateRouter.POST("/active-editor", controllers.ActiveEditorUser)

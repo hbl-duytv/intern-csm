@@ -14,11 +14,12 @@ func Home(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
-		user := services.GetUserByUsername(usernameString)
-		c.HTML(http.StatusOK, "home.html", gin.H{"user": user})
-	} else {
-		c.Redirect(301, "/login")
+		if user, err := services.GetUserByUsername(usernameString); err == nil {
+			c.HTML(http.StatusOK, "home.html", gin.H{"user": user})
+			return
+		}
 	}
+	c.Redirect(301, "/login")
 }
 func GetToken(c *gin.Context) {
 	token := c.Param("token")

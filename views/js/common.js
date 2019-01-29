@@ -39,3 +39,14 @@ function vadidateRegister(id){
 		}
 	});
 }
+function getTotalPage(callback){
+    $.ajax({
+        type:'get',
+        url:'http://localhost:8000/total-page',
+        data:{},
+        dataType:'json',
+        success: function(result){
+            return callback(result.totalPage)
+        }
+    });
+}
