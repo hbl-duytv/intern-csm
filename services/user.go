@@ -33,6 +33,14 @@ func GetUserByUsername(username string) (models.User, error) {
 	}
 	return user, nil
 }
+func GetUserByUsernamePassword(username string, password string) (models.User, error) {
+	var user models.User
+	passwordMD5 := helper.GetMD5Hash(password)
+	if err := DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
 func GetUserByEmail(email string) (models.User, error) {
 	var user models.User
 	if err := DB.Find(&user, "email=?", email).Error; err != nil {

@@ -25,7 +25,6 @@ func Login(c *gin.Context) {
 	user, err := services.RequireLogin(username, password)
 	if err == nil {
 		session.Set("user", username)
-		// services.SessionName = session.Get("user")
 		err := session.Save()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})

@@ -33,11 +33,11 @@ func AuthAdminRequired() gin.HandlerFunc {
 			user, _ := services.GetUserByUsername(usernameString)
 			if user.Type == constant.TypeAdmin {
 				c.Next()
-			} else {
-				c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})
+				return
 			}
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
+			c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})
+			return
 		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
 	}
 }

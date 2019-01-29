@@ -29,6 +29,9 @@ func InitRouter(router *gin.Engine) {
 	router.POST("/create-post", controllers.CreatePost)
 	router.POST("/update-content-post", controllers.UpdateContentPost)
 
+	router.GET("/blog", controllers.Blog)
+	router.GET("/blog/:postID", controllers.BlogDetailPost)
+	router.GET("/total-page", controllers.GetTotalNumberAllPost)
 	privateRouter := router.Group("/")
 	{
 		privateRouter.POST("/active-editor", controllers.ActiveEditorUser)
