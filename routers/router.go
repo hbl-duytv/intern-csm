@@ -15,9 +15,9 @@ func InitRouter(router *gin.Engine) {
 	router.GET("/home", controllers.Home)
 	router.GET("/editor-management2", controllers.RenderEditorManagement)
 
-	router.GET("/confirm-register/:username/:password/:email", controllers.RegisterSuccess)
+	router.GET("/confirm-register/:token", controllers.RegisterSuccess)
 	router.GET("/logout", controllers.Logout)
-	router.GET("/get-post-admin-permission", controllers.RenderPostManagementAdmin)
+	router.GET("/get-post-admin-permission2", controllers.RenderPostManagementAdmin)
 	router.GET("/get-post-editor-permission", controllers.RenderPostManagementEditor)
 	// post api router
 	router.POST("/register", controllers.SendConfirmRegister)

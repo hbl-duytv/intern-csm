@@ -46,7 +46,10 @@ modalConfirmActive(function (confirm) {
                 if (result.status == 200) {
                     $('#labelNotiModel').text('Kích hoạt thành công!');
                     $('#notification-modal').modal('show');
-                } else {
+                }
+            },
+            error: function (result) {
+                if (result.status == 404) {
                     $('#labelNotiModel').text('Kích hoạt thất bại!');
                     $('#notification-modal').modal('show');
                 }
@@ -82,7 +85,10 @@ modalConfirmDeactive(function (confirm) {
                 if (result.status == 200) {
                     $('#labelNotiModel').text('Bỏ kích hoạt thành công!');
                     $('#notification-modal').modal('show');
-                } else {
+                }
+            },
+            error: function (result) {
+                if (result.status == 404) {
                     $('#labelNotiModel').text('Bỏ kích hoạt thất bại!');
                     $('#notification-modal').modal('show');
                 }
@@ -118,7 +124,10 @@ modalConfirmDelete(function (confirm) {
                 if (result.status == 200) {
                     $("#labelNotiModel").text('Xóa thành công!');
                     $("#notification-modal").modal('show');
-                } else {
+                }
+            },
+            error: function (result) {
+                if (result.status == 404) {
                     $("#labelNotiModel").text('Xóa thất bại!');
                     $("#notification-modal").modal('show');
                 }
@@ -171,7 +180,10 @@ modalCreateEditor(function (confirm) {
                 if (result.status == 201) {
                     $("#labelNotiModel").text('Tạo biên tập viên thành công!');
                     $("#notification-modal").modal('show');
-                } else {
+                } 
+            },
+            error: function (result) {
+                if (result.status == 400) {
                     $("#labelNotiModel").text('Tạo biên tập viên thất bại!');
                     $("#notification-modal").modal('show');
                 }

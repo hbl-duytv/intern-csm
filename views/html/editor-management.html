@@ -10,7 +10,7 @@
           <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>{{.currentUser.Username}}</p>
+          <p>{{.user.Username}}</p>
           <p></a><i class="fa fa-circle text-success"></i> Online</p>
         </div>
       </div>
@@ -29,11 +29,11 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
         <li><a href="/home"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
-        {{if eq .currentUser.Type 0}}
+        {{if eq .user.Type 0}}
         <li><a href="/create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
         {{end}}
-        <li><a href="/get-post-admin-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
-        <li class="active"><a href="/editor-management2"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
+        <li><a href="/get-post-admin-permission2"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+        <li><a href="/editor-management2"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -78,7 +78,7 @@
               <td>{{.Username}}</td>
               <td>{{.Name}}</td>
               <td>{{.Gender}}</td>
-              <td>{{.BirthDay}}</td>
+              <td>{{.Birthday}}</td>
               <td>{{.PhoneNumber}}</td>
               {{if eq .Status 0}}
               <td>Chưa kích hoạt</td>

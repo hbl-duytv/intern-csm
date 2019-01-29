@@ -14,19 +14,19 @@ func GetPostWithAdminPermission() ([]models.TransformPost, error) {
 		return transformPosts, err
 	}
 	for _, v := range posts {
-
-		user, _ := GetUserByID(string(v.Creator))
-		transformPosts = append(transformPosts, models.TransformPost{
-			v.ID,
-			user.Name,
-			v.Title,
-			v.Topic,
-			v.Description,
-			v.Content,
-			v.Status,
-			v.CreatedAt,
-			v.UpdatedAt,
-		})
+		if user, err := GetUserByID((v.Creator)); err == nil {
+			transformPosts = append(transformPosts, models.TransformPost{
+				v.ID,
+				user.Name,
+				v.Title,
+				v.Topic,
+				v.Description,
+				v.Content,
+				v.Status,
+				v.CreatedAt,
+				v.UpdatedAt,
+			})
+		}
 	}
 	return transformPosts, nil
 }
@@ -37,21 +37,20 @@ func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
 		fmt.Println(err)
 		return tranformPosts, err
 	}
-
 	for _, v := range posts {
-
-		user, _ := GetUserByID(string(v.Creator))
-		tranformPosts = append(tranformPosts, models.TransformPost{
-			v.ID,
-			user.Name,
-			v.Title,
-			v.Topic,
-			v.Description,
-			v.Content,
-			v.Status,
-			v.CreatedAt,
-			v.UpdatedAt,
-		})
+		if user, err := GetUserByID((v.Creator)); err == nil {
+			tranformPosts = append(tranformPosts, models.TransformPost{
+				v.ID,
+				user.Name,
+				v.Title,
+				v.Topic,
+				v.Description,
+				v.Content,
+				v.Status,
+				v.CreatedAt,
+				v.UpdatedAt,
+			})
+		}
 	}
 	return tranformPosts, nil
 }
@@ -60,16 +59,13 @@ func GetPostById(id int) (models.Post, error) {
 	if err := DB.Find(&post, "id=?", id).Error; err != nil {
 		return post, err
 	}
-
 	return post, nil
-
 }
 func DeletePost(id int) error {
 	if err := DB.Where("id=?", id).Delete(models.Post{}).Error; err != nil {
 		return err
 	}
 	return nil
-
 }
 func UpdateContentPost(id int, title, topic, des, content string) error {
 	var post models.Post
@@ -90,7 +86,6 @@ func ChangeStatusPostWithComment(idPost, idUser, status int, mess string) error 
 	if err := DB.First(&post, idPost).Error; err != nil {
 		return err
 	}
-
 	if err := DB.Model(&post).Update("status", status).Error; err != nil {
 		return err
 	}
@@ -103,7 +98,6 @@ func ChangeStatusPostWithComment(idPost, idUser, status int, mess string) error 
 		return err
 	}
 	return nil
-
 }
 func CreatePost(idCreator int, title, topic, des, content string) error {
 	newPost := models.Post{
