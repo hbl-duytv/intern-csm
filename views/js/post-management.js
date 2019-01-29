@@ -140,7 +140,7 @@ var modalDetailPost = function (callback) {
     });
 
 };
-editor = CKEDITOR.replace('content-area');
+// editor = CKEDITOR.replace('content-area');
 modalDetailPost(function (confirm) {
 
     if (confirm) {
@@ -154,15 +154,17 @@ modalDetailPost(function (confirm) {
                     $('#detail-title').val(result.post["title"]);
                     $('#detail-topic').val(result.post["topic"]);
                     $('#detail-description').val(result.post["description"]);
-                    editor.setData(result.post["content"]);
+                    // console.log(result.post["content"]);
 
+                    $('#detail-content').html(result.post["content"]);
                     countCurrentComment = $("#detail-post-modal").find('[name = comment-detail]');
                     for (var i = 0; i < countCurrentComment.length; i++) {
 
                         $("#detail-post-comment").find('[name = comment-detail]').remove();
                     }
                     for (var i = 0; i < result.comment.length; i++) {
-                        var detail_comment = ("<div name='comment-detail' class='comment-detail-" + i + " form-group'><label>Comment " + (i + 1) + "</label><input disabled type='comment' name='comment' id='comment' tabindex='1' class='form-control ' value = " + "'" + result.comment[i]["message"] + " - " + result.comment[i]["created_at"] + " - " + result.username[i] + "'" + " required /></div>");
+                        var detail_comment = "<div style='background:#EEEEEE; border: 1px solid gray'  name='comment-detail' class='comment-detail-" + i + " form-group'><label>Nhận xét: " + (i + 1) + "</label><div class='content-comment'>Nội dung nhận xét: "+result.comment[i]["message"] +"</div><div class='time-created-comment'>Thời gian nhận xét: "+result.comment[i]["created_at"]+"</div><div class='creator-comment'>Người nhận xét: "+result.username[i]+"</div></div>"
+                        //var detail_comment = ("<div name='comment-detail' class='comment-detail-" + i + " form-group'><label>Comment " + (i + 1) + "</label><input disabled type='comment' name='comment' id='comment' tabindex='1' class='form-control ' value = " + "'" + result.comment[i]["message"] + " - " + result.comment[i]["created_at"] + " - " + result.username[i] + "'" + " required /></div>");
                         $('#detail-post-comment').append(detail_comment);
                     }
                 } else {

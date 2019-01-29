@@ -112,6 +112,7 @@ function ResetValue() {
     $('.topic').val("");
     $('.description').val("");
     CKEDITOR.instances['content-area'].setData("");
+    
 }
 
 

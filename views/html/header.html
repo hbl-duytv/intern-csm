@@ -51,8 +51,9 @@
                         <li class="user-header">
                             <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
                             <p>
-                                {{.user.Username}} - Web Developer
-                                <small>Member since Nov. 2012</small>
+                                {{.user.Username}}
+                                <!-- <small>Member since Nov. 2012</small> -->
+                                <small>Member since {{.month}}. {{.year}}</small>
                             </p>
                         </li>
                         <!-- Menu user-->
@@ -61,7 +62,7 @@
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
                             </div>
                         </li>
                     </ul>

@@ -54,9 +54,9 @@ modalConfirmActive(function (confirm) {
     }
 });
 function ResetValue() {
-    title = $('#title').val("");
-    topic = $('#topic').val("");
-    description = $('#description').val("");
-    CKEDITOR.instances['content-area'].setData("");
-    // content = $('.content-area').val("")
+    // title = $('#title').val("");
+    // topic = $('#topic').val("");
+    // description = $('#description').val("");
+    // CKEDITOR.instances['content-area'].setData("");
+    console.log("nhay vao day");
 }

@@ -36,11 +36,11 @@
                 <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
                 {{else}}
                 <!--admin permission-->
-                <li><a href="/get-post-admin-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+                <li><a href="/get-post-admin-permission2"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
 
 
 
-                <li class="active"><a href="/editor-management2"><i class="fa fa-users"></i> <span>Quản lý biên tập
+                <li><a href="/editor-management2"><i class="fa fa-users"></i> <span>Quản lý biên tập
                             viên</span></a></li>
                 {{end}}
             </ul>
@@ -262,28 +262,43 @@
                         <div class="modal-body">
                             <form id="detail-post-comment">
                                 <div class="form-group">
-                                    <label>Title</label>
+                                    <label>Tiêu đề</label>
 
-                                    <input disabled type="text" name="username" id="detail-title" tabindex="1" class="form-control"
+                                    <input disabled type="text" id="detail-title" tabindex="1" class="form-control"
                                         required />
                                 </div>
                                 <div class="form-group">
-                                    <label>Topic</label>
+                                    <label>Chủ đề</label>
 
-                                    <input disabled type="email" name="email" id="detail-topic" tabindex="1" class="form-control"
+                                    <input disabled type="email" id="detail-topic" tabindex="1" class="form-control"
                                         required />
                                 </div>
                                 <div class="form-group">
-                                    <label>Descripiton</label>
+                                    <label>Mô tả</label>
 
-                                    <input disabled type="email" name="email" id="detail-description" tabindex="1"
-                                        class="form-control" required />
+                                    <input disabled type="email" id="detail-description" tabindex="1" class="form-control"
+                                        required />
                                 </div>
                                 <div class="form-group">
                                     <label>Nội dung</label>
-                                    <textarea disabled name="content-area" class="content-area form-control" id="detail-content"
-                                        rows="3"></textarea>
-                                </div>
+                                    <div style="background: #EEEEEE; border: 1px solid gray;" id="detail-content">
+
+                                    </div>
+                                    <!-- <div style="background:#EEEEEE; border: 1px solid gray"  name='comment-detail' class='comment-detail- form-group'>
+                                        <label>Nhận xét
+
+                                        </label>
+                                        <div class="content-comment">
+
+                                        </div>
+                                        <div class="time-created-comment">
+
+                                        </div>
+                                        <div class="creator-comment">
+
+                                        </div>
+
+                                    </div> -->
 
 
 

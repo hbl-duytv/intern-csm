@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 {{template "head" .}}
-
 <body class="hold-transition skin-blue sidebar-mini">
-    {{template "header"}}
+    {{template "header" .}}
     {{if eq .index -1}}
     <!-- home-->
     {{template "home" .}}
@@ -20,11 +19,7 @@
     <!-- update post-->
     {{template "update-post" .}}
     {{end}}
+    <!--JS-->
     {{template "footer-lib" .}}
-
-
-
-
 </body>
-
 </html>
