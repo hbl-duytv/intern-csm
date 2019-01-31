@@ -7,7 +7,8 @@ import (
 	"github.com/hbl-duytv/intern-csm/middleware"
 )
 
-func InitRouter(router *gin.Engine) {
+func InitRouter() *gin.Engine {
+	router := gin.Default()
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.GET("/", controllers.Index)
@@ -33,4 +34,5 @@ func InitRouter(router *gin.Engine) {
 		privateRouter.GET("/editor-management", controllers.EditorManagement)
 	}
 	privateRouter.Use(middleware.AuthAdminRequired())
+	return router
 }

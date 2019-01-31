@@ -1,13 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/routers"
 )
 
 func main() {
-	router := gin.Default()
-	routers.InitRouter(router)
+	router := routers.InitRouter()
 	router.Static("/views", "./views")
 	router.LoadHTMLGlob("./views/html/*")
 	//start serve
