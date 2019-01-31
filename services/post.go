@@ -66,3 +66,10 @@ func GetPostActiveLimit(page int) ([]models.TransformPost, int, error) {
 	}
 	return transformPosts, totalPost, nil
 }
+func GetNumberPostByMonth(month int) (int, error) {
+	var posts []models.Post
+	if err := DB.Where("MONTH(created_at)=?", month).Find(&posts).Error; err != nil {
+		return len(posts), err
+	}
+	return len(posts), nil
+}

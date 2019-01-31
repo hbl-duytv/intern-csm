@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/services"
 
 	"github.com/gin-gonic/contrib/sessions"
@@ -21,8 +20,15 @@ func Home(c *gin.Context) {
 	}
 	c.Redirect(301, "/login")
 }
-func GetToken(c *gin.Context) {
-	token := c.Param("token")
-	result := helper.GetToken(token)
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": result})
+func NumberPostInYear(c *gin.Context) {
+	var numberPosts [12]int
+	var err error
+	for index := 0; index < 12; index++ {
+		numberPosts[index], err = services.GetNumberPostByMonth(index + 1)
+	}
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "posts": nil})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "numberPosts": numberPosts})
 }

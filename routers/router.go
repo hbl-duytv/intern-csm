@@ -13,6 +13,7 @@ func InitRouter(router *gin.Engine) {
 	router.GET("/", controllers.Index)
 	router.GET("/login", controllers.Index)
 	router.GET("/home", controllers.Home)
+	router.GET("/get-posts-in-year", controllers.NumberPostInYear)
 	router.GET("/blog", controllers.Blog)
 	router.GET("/blog/:postID", controllers.BlogDetailPost)
 	router.GET("/logout", controllers.Logout)

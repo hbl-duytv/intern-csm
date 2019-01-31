@@ -120,9 +120,10 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-        <li class="active"><a href="https://adminlte.io/docs"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
+        <li class="active"><a href="/home"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
         <li><a href="./create-post.html"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
         <li><a href="./post-management.html"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+        <li><a href="/blog"><i class="fa fa-users"></i> <span>Blog</span></a></li>
         {{if eq .user.Type 1}}
         <li><a href="/editor-management"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
         {{end}}
@@ -139,12 +140,11 @@
     <section class="content-header">
       <h1>
         Thống kê chung
-        <small>it all starts here</small>
+        <small></small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li>
+        <li class="active">Thống kê chung</li>
       </ol>
     </section>
     <!-- Main content -->
@@ -210,7 +210,12 @@
                       </div>
                     </div>
                     <!-- ./col -->
-                  </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <canvas id="myChart" width="400px" height="400px"></canvas>
+                </div>
+            </div>
     </section>
     <!-- /.content -->
   </div>
@@ -255,7 +260,6 @@
 
               <div class="menu-info">
                 <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-
                 <p>New phone +1(800)555-1234</p>
               </div>
             </a>
@@ -425,9 +429,12 @@
 <script src="/views/lib/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="/views/lib/bootstrap-3.3.0/dist/js/bootstrap.min.js"></script>
+<!-- chart js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
 <!-- SlimScroll -->
 <script src="/views/lib/jquery.slimscroll.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/views/lib/adminlte.min.js"></script>
+<script src="/views/js/home.js"></script>
 </body>
 </html>
