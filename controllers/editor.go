@@ -12,7 +12,6 @@ import (
 )
 
 func ActiveEditorUser(c *gin.Context) {
-
 	idUser, _ := strconv.Atoi(c.PostForm("id"))
 	if services.UpdateStatusUser(idUser, constant.ACTIVE_NUMBER) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
@@ -30,7 +29,7 @@ func DeactiveEditorUser(c *gin.Context) {
 }
 func DeleteUser(c *gin.Context) {
 	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.DeletePost(idUser) == nil {
+	if services.DeleteUser(idUser) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete user successfully!"})
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Delete user fail!"})
@@ -49,28 +48,40 @@ func CreateUser(c *gin.Context) {
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
-		if services.CreateAccount(username, password, email, name, gender, birthday, phoneNumber, status, constant.DEACTIVE_NUMBER, token, constant.DEACTIVE_NUMBER) == nil {
+		if services.CreateAccount(username, password, email, name, gender, birthday, phoneNumber, status, constant.DEACTIVE_NUMBER, token) == nil {
 			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User create success!"})
 		}
-
 	}
 }
-
 func RenderEditorManagement(c *gin.Context) {
-
 	editors, _ := services.GetAllEditorUser()
 	session := sessions.Default(c)
+	session.Set("user", session_name)
 	username := session.Get("user")
+
 	if usernameString, ok := username.(string); ok {
 		if user, err := services.GetUserByUsername(usernameString); err == nil {
-			month, year, _ := services.GetTimeCreateUSer(user.ID)
-			c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "editors": editors, "user": user, "index": 1, "title": "Editor management"})
+			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
 		}
-
 	} else {
 		c.Redirect(constant.DIRECT_STATUS, "/home")
 	}
-
 }
+
+// func RenderEditorManagement3(c *gin.Context) {
+// 	editors, _ := services.GetAllEditorUser()
+// 	session := sessions.Default(c)
+// 	session.Set("user", session_name)
+// 	// session.Set("user", "admin")
+// 	username := session.Get("user")
+// 	fmt.Printf("type: %T", username)
+// 	if usernameString, ok := username.(string); ok {
+// 		if user, err := services.GetUserByUsername(usernameString); err == nil {
+// 			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
+// 		}
+// 	} else {
+// 		c.Redirect(constant.DIRECT_STATUS, "/home")
+// 	}
+// }

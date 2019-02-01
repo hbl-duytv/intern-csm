@@ -57,8 +57,8 @@ $(document).ready(function () {
     });
 });
 CKEDITOR.replace('content-area');
-var creator, title, topic, description, content;
-
+var creator, title, topic, description, content, tag;
+const test = "tag test";
 var modalCreatePost = function (callback) {
     $(".btn-create-post").on("click", function () {
         creator = this.id.substring(this.id.indexOf("-") + 1);
@@ -68,6 +68,10 @@ var modalCreatePost = function (callback) {
         topic = $('.topic').val();
         description = $('.description').val();
         content = CKEDITOR.instances['content-area'].getData();
+        tag = $('.input-tag').val();
+        console.log(tag);
+        // tag = tag.replace(/,/g , ' ');
+        // console.log(tag);
         $("#active-modal").modal('show');
     });
     $("#modal-btn-ok-active").on("click", function () {
@@ -85,7 +89,7 @@ modalCreatePost(function (confirm) {
         $.ajax({
             type: 'post',
             url: 'http://localhost:8000/create-post',
-            data: { 'creator': creator, 'title': title, 'topic': topic, 'description': description, 'content': content },
+            data: { 'creator': creator, 'title': title, 'topic': topic, 'description': description, 'content': content, 'tag': tag },
             dataType: 'json',
             success: function (result) {
                 if (result.status == 201) {
@@ -108,11 +112,12 @@ modalCreatePost(function (confirm) {
 });
 function ResetValue() {
     $('.title').val("");
-
+    $('input .tag').val("");
     $('.topic').val("");
     $('.description').val("");
     CKEDITOR.instances['content-area'].setData("");
-    
+    $('.input-tag').val("");
 }
+
 
 

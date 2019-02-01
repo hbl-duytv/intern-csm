@@ -17,4 +17,5 @@ type User struct {
 	Name        string    `json:"name"`
 	Token       string    `json:"token"`
 	Confirm     int       `json:"confirm"`
+	TimeConfirm int       `json:"time_confirm"`
 }

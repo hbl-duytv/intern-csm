@@ -1,6 +1,6 @@
 {{define "update-post"}}
 <div class="wrapper">
-   
+
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
@@ -71,6 +71,11 @@
                 <div class="form-group">
                     <label>Nội dung</label>
                     <textarea name="content-area" class="content-area form-control" id="content-area" rows="3">{{.post.Content}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tag</label>
+                    <br>
+                    <input name="tag" class="input-tag" id="tag" type="text" data-role="tagsinput" value="{{.post.Tag}}" />
                 </div>
                 <div class="form-group">
                     <button type="button" class="btn-update-post btn btn-primary" id="update-{{.post.ID}}">Sửa bài

@@ -5,7 +5,7 @@ $(document).ready(function () {
     });
 })
 CKEDITOR.replace('content-area');
-var idPost, title, topic, description, content;
+var idPost, title, topic, description, content, tag;
 var modalConfirmActive = function (callback) {
     $(".btn-update-post").on("click", function () {
         idPost = this.id.substring(this.id.indexOf("-") + 1)
@@ -13,6 +13,7 @@ var modalConfirmActive = function (callback) {
         topic = $('#topic').val()
         description = $('#description').val();
         content = CKEDITOR.instances['content-area'].getData();
+        tag = $('.input-tag').val();
         // content = $('.content-area').val()
         $("#active-modal").modal('show');
     });
@@ -31,7 +32,7 @@ modalConfirmActive(function (confirm) {
         $.ajax({
             type: 'post',
             url: 'http://localhost:8000/update-content-post',
-            data: { 'id': idPost, 'title': title, 'topic': topic, 'description': description, 'content': content },
+            data: { 'id': idPost, 'title': title, 'topic': topic, 'description': description, 'content': content, 'tag': tag },
             dataType: 'json',
             success: function (result) {
                 if (result.status == 200) {

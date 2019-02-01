@@ -14,10 +14,9 @@ func Home(c *gin.Context) {
 	username := session.Get("user")
 	if usernameString, ok := username.(string); ok {
 		if user, err := services.GetUserByUsername(usernameString); err == nil {
-			month, year, _ := services.GetTimeCreateUSer(user.ID)
-			c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "index": -1, "title": "Home", "month": month, "year": year})
-		}
 
+			c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "index": -1, "title": "Home", "month": user.CreatedAt.Month(), "year": user.CreatedAt.Year()})
+		}
 	} else {
 		c.Redirect(constant.DIRECT_STATUS, "/login")
 	}

@@ -25,6 +25,7 @@ func GetPostWithAdminPermission() ([]models.TransformPost, error) {
 				v.Status,
 				v.CreatedAt,
 				v.UpdatedAt,
+				v.Tag,
 			})
 		}
 	}
@@ -49,6 +50,7 @@ func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
 				v.Status,
 				v.CreatedAt,
 				v.UpdatedAt,
+				v.Tag,
 			})
 		}
 	}
@@ -56,18 +58,21 @@ func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
 }
 func GetPostById(id int) (models.Post, error) {
 	var post models.Post
-	if err := DB.Find(&post, "id=?", id).Error; err != nil {
+	if err := DB.Debug().Find(&post, "id=?", id).Error; err != nil {
 		return post, err
 	}
 	return post, nil
 }
 func DeletePost(id int) error {
-	if err := DB.Where("id=?", id).Delete(models.Post{}).Error; err != nil {
+	var post models.Post
+	if err := DB.Where("id=?", id).Find(&post).Error; err != nil {
 		return err
 	}
+	DB.Delete(post)
 	return nil
+
 }
-func UpdateContentPost(id int, title, topic, des, content string) error {
+func UpdateContentPost(id int, title, topic, des, content, tag string) error {
 	var post models.Post
 	if err := DB.Where("id=?", id).Find(&post).Error; err != nil {
 		return err
@@ -76,6 +81,7 @@ func UpdateContentPost(id int, title, topic, des, content string) error {
 	post.Topic = topic
 	post.Description = des
 	post.Content = content
+	post.Tag = tag
 	if err := DB.Save(&post).Error; err != nil {
 		return err
 	}
@@ -99,7 +105,7 @@ func ChangeStatusPostWithComment(idPost, idUser, status int, mess string) error 
 	}
 	return nil
 }
-func CreatePost(idCreator int, title, topic, des, content string) error {
+func CreatePost(idCreator int, title, topic, des, content, tag string) error {
 	newPost := models.Post{
 		Creator:     idCreator,
 		Title:       title,
@@ -109,6 +115,7 @@ func CreatePost(idCreator int, title, topic, des, content string) error {
 		Status:      0,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
+		Tag:         tag,
 	}
 	if err := DB.Save(&newPost).Error; err != nil {
 		return err

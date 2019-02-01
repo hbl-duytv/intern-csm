@@ -12,6 +12,7 @@ type Post struct {
 	Status      int       `json:"status"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	Tag         string    `json:"tag"`
 }
 type TransformPost struct {
 	ID          int       `json:"id"`
@@ -23,4 +24,5 @@ type TransformPost struct {
 	Status      int       `json:"status"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	Tag         string    `json:"tag"`
 }

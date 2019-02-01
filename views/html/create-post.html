@@ -57,6 +57,7 @@
     <section class="content">
       <form role="form">
         <!-- text input -->
+
         <div class="form-group">
           <label>Tiêu đề</label>
           <input type="text" name="title" class="title form-control" id="title" placeholder="Tiêu đề ...">
@@ -74,6 +75,14 @@
           <label>Nội dung</label>
           <textarea name="content-area" class="content-area form-control" id="content-area" rows="3" placeholder="Enter ..."></textarea>
         </div>
+
+        <div class="form-group">
+          <label>Tag</label>
+          <br>
+          <input name="tag" class="input-tag" id="tag" type="text" value="" data-role="tagsinput" placeholder="Add tags" />
+        </div>
+
+
         <div class="form-group">
           <button type="button" class="btn-create-post btn btn-primary" id="create-{{.user.ID}}">Tao</button>
           <!-- <button id="btn-create-post" class="btn-create-post btn btn-primary">Tạo bài viết</button> -->

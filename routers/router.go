@@ -7,14 +7,15 @@ import (
 	"github.com/hbl-duytv/intern-csm/middleware"
 )
 
-func InitRouter(router *gin.Engine) {
+func InitRouter() *gin.Engine {
+	router := gin.Default()
 	store := sessions.NewCookieStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 	router.GET("/", controllers.Index)
 	router.GET("/login", controllers.Index)
 	router.GET("/home", controllers.Home)
 	router.GET("/editor-management2", controllers.RenderEditorManagement)
-
+	// router.GET("/editor-management3", controllers.RenderEditorManagement3)
 	router.GET("/confirm-register/:token", controllers.RegisterSuccess)
 	router.GET("/logout", controllers.Logout)
 	router.GET("/get-post-admin-permission2", controllers.RenderPostManagementAdmin)
@@ -43,4 +44,5 @@ func InitRouter(router *gin.Engine) {
 		privateRouter.GET("/render-detail-post/:id", controllers.RenderDetailPost)
 	}
 	privateRouter.Use(middleware.AuthAdminRequired())
+	return router
 }

@@ -151,22 +151,31 @@ modalDetailPost(function (confirm) {
 
             success: function (result) {
                 if (result.status == 200) {
+
                     $('#detail-title').val(result.post["title"]);
                     $('#detail-topic').val(result.post["topic"]);
                     $('#detail-description').val(result.post["description"]);
-                    // console.log(result.post["content"]);
+
 
                     $('#detail-content').html(result.post["content"]);
-                    countCurrentComment = $("#detail-post-modal").find('[name = comment-detail]');
-                    for (var i = 0; i < countCurrentComment.length; i++) {
 
-                        $("#detail-post-comment").find('[name = comment-detail]').remove();
-                    }
-                    for (var i = 0; i < result.comment.length; i++) {
-                        var detail_comment = "<div style='background:#EEEEEE; border: 1px solid gray'  name='comment-detail' class='comment-detail-" + i + " form-group'><label>Nhận xét: " + (i + 1) + "</label><div class='content-comment'>Nội dung nhận xét: "+result.comment[i]["message"] +"</div><div class='time-created-comment'>Thời gian nhận xét: "+result.comment[i]["created_at"]+"</div><div class='creator-comment'>Người nhận xét: "+result.username[i]+"</div></div>"
-                        //var detail_comment = ("<div name='comment-detail' class='comment-detail-" + i + " form-group'><label>Comment " + (i + 1) + "</label><input disabled type='comment' name='comment' id='comment' tabindex='1' class='form-control ' value = " + "'" + result.comment[i]["message"] + " - " + result.comment[i]["created_at"] + " - " + result.username[i] + "'" + " required /></div>");
-                        $('#detail-post-comment').append(detail_comment);
-                    }
+                    RemoveOldTag($('#detail-tag').val());
+                    AddNewTag(result.post["tag"]);
+
+                    // countCurrentComment = $("#detail-post-modal").find('[name = comment-detail]');
+                    // for (var i = 0; i < countCurrentComment.length; i++) {
+
+                    //     $("#detail-post-comment").find('[name = comment-detail]').remove();
+                    // }
+                    RemoveOldComment($("#detail-post-modal").find('[name = comment-detail]'));
+                    // console.log("cmt: ",result.comment);
+                    // console.log("length: ", result.comment.length);
+                    AddNewComment(result.comment, result.username);
+                    // for (var i = 0; i < result.comment.length; i++) {
+                    //     var detail_comment = "<div style='background:#EEEEEE; border: 1px solid gray'  name='comment-detail' class='comment-detail-" + i + " form-group'><label>Nhận xét: " + (i + 1) + "</label><div class='content-comment'>Nội dung nhận xét: " + result.comment[i]["message"] + "</div><div class='time-created-comment'>Thời gian nhận xét: " + result.comment[i]["created_at"] + "</div><div class='creator-comment'>Người nhận xét: " + result.username[i] + "</div></div>"
+
+                    //     $('#detail-post-comment').append(detail_comment);
+                    // }
                 } else {
 
                 }
@@ -176,5 +185,31 @@ modalDetailPost(function (confirm) {
 
     }
 });
-
+function RemoveOldTag(src) {
+    src = src.split(",");
+    for (var i = 0; i < src.length; i++) {
+        $('#detail-tag').tagsinput('remove', src[i]);
+    }
+}
+function AddNewTag(src) {
+    src = src.split(",");
+    for (var i = 0; i < src.length; i++) {
+        for (var i = 0; i < src.length; i++) {
+            $('#detail-tag').tagsinput('add', src[i]);
+        }
+    }
+}
+function RemoveOldComment(arrOldCmt) {
+    for (var i = 0; i < arrOldCmt.length; i++) {
+        $("#detail-post-comment").find('[name = comment-detail]').remove();
+    }
+}
+function AddNewComment(arrNewCmt, arrUser) {
+    console.log("cmt: ", arrNewCmt);
+    console.log("length:", arrNewCmt.length);
+    for (var i = 0; i < arrNewCmt.length; i++) {
+        var detail_comment = "<div style='background:#EEEEEE; border: 1px solid gray'  name='comment-detail' class='comment-detail-" + i + " form-group'><label>Nhận xét: " + (i + 1) + "</label><div class='content-comment'>Nội dung nhận xét: " + arrNewCmt[i]["message"] + "</div><div class='time-created-comment'>Thời gian nhận xét: " + arrNewCmt[i]["created_at"] + "</div><div class='creator-comment'>Người nhận xét: " + arrUser[i] + "</div></div>"
+        $('#detail-post-comment').append(detail_comment);
+    }
+}
 

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hbl-duytv/intern-csm/constant"
@@ -17,7 +18,8 @@ func GetAllEditorUser() ([]models.User, error) {
 }
 func GetUserByToken(token string) (models.User, error) {
 	var user models.User
-	if err := DB.Where("token=?", token).Find(&user).Error; err != nil {
+	if err := DB.Debug().Where("token=?", token).Find(&user).Error; err != nil {
+		fmt.Printf("error not found: %v", err)
 		return user, err
 	}
 	return user, nil
@@ -46,11 +48,19 @@ func UpdateStatusUser(id, status int) error {
 	}
 	return nil
 }
-func ConfirmRegisterUser(user *models.User) error {
+func ConfirmRegisterUser(id int) error {
+	var user models.User
+	if err := DB.Where("id=?", id).Find(&user).Error; err != nil {
+		return err
+	}
 	if err := DB.Model(&user).Update("confirm", constant.ACTIVE_NUMBER).Error; err != nil {
 		return err
 	}
 	return nil
+	// if err := DB.Model(&user).Update("confirm", constant.ACTIVE_NUMBER).Error; err != nil {
+	// 	return err
+	// }
+	// return nil
 }
 func GetUserByID(id int) (models.User, error) {
 	var user models.User
@@ -75,23 +85,24 @@ func CreateUser(username string, password string, email string, status int, type
 }
 func DeleteUser(id int) error {
 	var user models.User
-	if err := DB.First(&user, id).Error; err != nil {
+	if err := DB.Where("id=?", id).Find(&user).Error; err != nil {
 		return err
 	}
-	if err := DB.Delete(&user).Error; err != nil {
-		return err
-	}
+	DB.Delete(user)
 	return nil
+
 }
 func RequireLogin(username, password string) (models.User, error) {
 	var user models.User
 	passwordMD5 := helper.GetMD5Hash(password)
-	if err := DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user).Error; err != nil {
+	if err := DB.Debug().Where("username = ? AND password = ?", username, passwordMD5).Find(&user).Error; err != nil {
 		return user, err
 	}
+	fmt.Println("username:", user.Username)
+	fmt.Println("password: ", user.Password)
 	return user, nil
 }
-func CreateAccount(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int, token string, confirm int) error {
+func CreateAccount(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int, token string) error {
 	passwordMD5 := helper.GetMD5Hash(password)
 
 	newUser := models.User{
@@ -105,13 +116,15 @@ func CreateAccount(username string, password string, email string, name string, 
 		Type:        typeUser,
 		Status:      status,
 		Token:       token,
-		Confirm:     confirm,
+		Confirm:     constant.DEACTIVE_NUMBER,
+		TimeConfirm: constant.TIME_CONFIRM,
 	}
-	if err := DB.Save(&newUser).Error; err != nil {
+	if err := DB.Debug().Save(&newUser).Error; err != nil {
 		return err
 	}
 	return nil
 }
+
 func GetTimeCreateUSer(id int) (int, int, error) {
 	var user models.User
 	if err := DB.Where("id=?", id).Find(&user).Error; err != nil {
@@ -119,12 +132,17 @@ func GetTimeCreateUSer(id int) (int, int, error) {
 	}
 	return int(user.CreatedAt.Month()), int(user.CreatedAt.Year()), nil
 }
-func CheckTimeToConfirmUser(user models.User) bool {
-	timeCheck := user.CreatedAt.Add(1 * time.Minute)
-	now := time.Now()
-	if now.Sub(timeCheck).Minutes() > 1 {
-		return false
+func CheckTimeToConfirmUser(id int) (bool, error) {
+	var user models.User
+	if err := DB.Where("id=?", id).Find(&user).Error; err != nil {
+		return false, err
 	}
-	return true
+	timeConfirm := user.Confirm * 60 * 60
+	timeCheck := user.CreatedAt.Add(time.Duration(timeConfirm) * time.Second)
+	now := time.Now()
+	if now.Sub(timeCheck).Seconds() > 0 {
+		return false, nil
+	}
+	return true, nil
 
 }
