@@ -19,6 +19,6 @@ func Home(c *gin.Context) {
 		}
 
 	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/login")
+		c.Redirect(constant.DirectStatus, "/login")
 	}
 }

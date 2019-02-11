@@ -21,12 +21,13 @@ func RenderPostManagementAdmin(c *gin.Context) {
 			if posts, err := services.GetPostWithAdminPermission(); err == nil {
 				month, year, _ := services.GetTimeCreateUSer(user.ID)
 				c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
+
 			}
+			return
 		}
 
-	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/home")
 	}
+	c.Redirect(constant.DirectStatus, "/home")
 
 }
 
@@ -41,7 +42,7 @@ func RenderPostManagementEditor(c *gin.Context) {
 			c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
 		}
 	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/home")
+		c.Redirect(constant.DirectStatus, "/home")
 	}
 }
 func RenderCreatePost(c *gin.Context) {
@@ -51,9 +52,9 @@ func RenderCreatePost(c *gin.Context) {
 	if user, err := services.GetUserByUsername(username.(string)); err == nil {
 		month, year, _ := services.GetTimeCreateUSer(user.ID)
 		c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "index": 0, "title": "Create Post"})
-	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/home")
+		return
 	}
+	c.Redirect(constant.DirectStatus, "/home")
 }
 
 func RenderUpdatePost(c *gin.Context) {
@@ -62,9 +63,9 @@ func RenderUpdatePost(c *gin.Context) {
 	if post, err := services.GetPostById(idPost); err == nil {
 		month, year, _ := services.GetTimeCreateUSer(post.Creator)
 		c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "post": post, "index": 3, "title": "Update Post"})
-	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/home")
+		return
 	}
+	c.Redirect(constant.DirectStatus, "/home")
 
 }
 func RenderDetailPost(c *gin.Context) {
@@ -110,19 +111,16 @@ func ActiveStatusPost(c *gin.Context) {
 	var user models.User
 	if usernameString, ok := username.(string); ok {
 		user, _ = services.GetUserByUsername(usernameString)
-	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/login")
 	}
-	// var post models.Post
+
 	idPost, _ := strconv.Atoi(c.PostForm("id"))
 	messageComment := c.PostForm("comment")
 
-	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.ACTIVE_NUMBER, messageComment) == nil {
+	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.ActiveNumber, messageComment) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Active status post successfully!"})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Active status post fail!"})
+		return
 	}
-
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Active status post fail!"})
 }
 func DeActiveStatusPost(c *gin.Context) {
 	session := sessions.Default(c)
@@ -130,17 +128,15 @@ func DeActiveStatusPost(c *gin.Context) {
 	var user models.User
 	if usernameString, ok := username.(string); ok {
 		user, _ = services.GetUserByUsername(usernameString)
-	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/login")
 	}
 
 	idPost, _ := strconv.Atoi(c.PostForm("id"))
 	messageComment := c.PostForm("comment")
-	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.DEACTIVE_NUMBER, messageComment) == nil {
+	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.DeactiveNumber, messageComment) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "DeActive status post successfully!"})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Deactive status post fail!"})
+		return
 	}
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Deactive status post fail!"})
 
 }
 func DeletePost(c *gin.Context) {
@@ -149,10 +145,9 @@ func DeletePost(c *gin.Context) {
 
 	if services.DeletePost(idPost) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete this post successfully"})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Delete this post fail"})
+		return
 	}
-
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Delete this post fail"})
 }
 func UpdateContentPost(c *gin.Context) {
 
@@ -165,13 +160,12 @@ func UpdateContentPost(c *gin.Context) {
 
 	if strings.Trim(title, " ") == "" || strings.Trim(topic, " ") == "" || description == "" || strings.Trim(content, " ") == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "error": "Nhập đầy đủ thông tin"})
-	} else {
-		if services.UpdateContentPost(id, title, topic, description, content) == nil {
-			c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "update post successfully!"})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "update post fail!"})
-		}
-
+		return
 	}
+	if services.UpdateContentPost(id, title, topic, description, content) == nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "update post successfully!"})
+		return
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "update post fail!"})
 
 }

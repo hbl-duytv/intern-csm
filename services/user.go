@@ -10,7 +10,7 @@ import (
 
 func GetAllEditorUser() ([]models.User, error) {
 	var users []models.User
-	if err := DB.Debug().Where("type=? AND confirm=?", constant.DEACTIVE_NUMBER, constant.ACTIVE_NUMBER).Find(&users).Error; err != nil {
+	if err := DB.Debug().Where("type=? AND confirm=?", constant.DeactiveNumber, constant.ActiveNumber).Find(&users).Error; err != nil {
 		return users, err
 	}
 	return users, nil
@@ -47,7 +47,7 @@ func UpdateStatusUser(id, status int) error {
 	return nil
 }
 func ConfirmRegisterUser(user *models.User) error {
-	if err := DB.Model(&user).Update("confirm", constant.ACTIVE_NUMBER).Error; err != nil {
+	if err := DB.Model(&user).Update("confirm", constant.ActiveNumber).Error; err != nil {
 		return err
 	}
 	return nil
@@ -119,10 +119,13 @@ func GetTimeCreateUSer(id int) (int, int, error) {
 	}
 	return int(user.CreatedAt.Month()), int(user.CreatedAt.Year()), nil
 }
-func CheckTimeToConfirmUser(user models.User) bool {
-	timeCheck := user.CreatedAt.Add(1 * time.Minute)
+
+// User must click link in email to confirm account in 8 hours from creating account
+func HasLimitTimeConfirm(user models.User) bool {
+	timeConfirm := user.Confirm * 60 * 60
+	timeCheck := user.CreatedAt.Add(time.Duration(timeConfirm) * time.Second)
 	now := time.Now()
-	if now.Sub(timeCheck).Minutes() > 1 {
+	if now.Sub(timeCheck).Seconds() > 0 {
 		return false
 	}
 	return true
