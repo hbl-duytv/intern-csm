@@ -1,0 +1,185 @@
+package controllers
+
+import (
+	"fmt"
+	"net/http"
+	"strconv"
+	"strings"
+
+	"github.com/gin-gonic/contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"github.com/hbl-duytv/intern-csm/constant"
+	"github.com/hbl-duytv/intern-csm/models"
+	"github.com/hbl-duytv/intern-csm/services"
+)
+
+func RenderPostManagementAdmin(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("user", session_name)
+	username := session.Get("user")
+	if usernameString, ok := username.(string); ok {
+		if user, err := services.GetUserByUsername(usernameString); err == nil {
+			if posts, err := services.GetPostWithAdminPermission(); err == nil {
+				// month, year, _ := services.GetTimeCreateUSer(user.ID)
+				c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
+			}
+		}
+	} else {
+		c.Redirect(constant.DirectStatus, "/home")
+	}
+}
+
+func RenderPostManagementEditor(c *gin.Context) {
+	var posts []models.TransformPost
+	session := sessions.Default(c)
+	session.Set("user", session_name)
+	username := session.Get("user")
+	if user, err := services.GetUserByUsername(username.(string)); err == nil {
+		if posts, err = services.GetPostWithEditorPermission(user.ID); err == nil {
+			// month, year, _ := services.GetTimeCreateUSer(user.ID)
+			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
+		}
+	} else {
+		c.Redirect(constant.DirectStatus, "/home")
+	}
+}
+
+func RenderCreatePost(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("user", session_name)
+	username := session.Get("user")
+	if user, err := services.GetUserByUsername(username.(string)); err == nil {
+		// month, year, _ := services.GetTimeCreateUSer(user.ID)
+		c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "user": user, "index": 0, "title": "Create Post"})
+	} else {
+		c.Redirect(constant.DirectStatus, "/home")
+	}
+}
+
+func RenderUpdatePost(c *gin.Context) {
+	idPost, _ := strconv.Atoi(c.Param("id"))
+	if post, err := services.GetPostById(idPost); err == nil {
+		month, year, _ := services.GetTimeCreateUSer(post.CreatorID)
+		c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "post": post, "index": 3, "title": "Update Post"})
+	} else {
+		c.Redirect(constant.DirectStatus, "/home")
+	}
+}
+
+func RenderDetailPost(c *gin.Context) {
+	idPost, _ := strconv.Atoi(c.Param("id"))
+	var usernames []string
+
+	post, _ := services.GetPostById(idPost)
+	comments, _ := services.GetCommentsById(idPost)
+	for _, v := range comments {
+		// var user models.User
+		// services.DB.Find(&user, "id=?", v.CommentatorID)
+		user, _ := services.GetUserByID(v.CommentatorID)
+		usernames = append(usernames, user.Name)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "post": post, "comment": comments, "username": usernames})
+}
+
+func CreatePost(c *gin.Context) {
+	var user models.User
+	session := sessions.Default(c)
+	session.Set("user", session_name)
+	username := session.Get("user")
+	if usernameString, ok := username.(string); ok {
+		user, _ = services.GetUserByUsername(usernameString)
+	}
+	creator, _ := strconv.Atoi(c.PostForm("creator"))
+	title := c.PostForm("title")
+	topic := c.PostForm("topic")
+	description := c.PostForm("description")
+	content := c.PostForm("content")
+	tag := c.PostForm("tag")
+	fmt.Println(title, topic, description, content)
+	if strings.Trim(title, " ") == "" || strings.Trim(topic, " ") == "" || description == "" || strings.Trim(content, " ") == "" || strings.Trim(tag, " ") == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "error": "Nhập đầy đủ thông tin"})
+	} else {
+		if services.CreatePost(creator, title, topic, description, content, tag) == nil {
+			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "user": user, "message": "create post successfully!"})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "user": user, "message": "create post fail!"})
+		}
+	}
+}
+
+func ActiveStatusPost(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("user", session_name)
+	username := session.Get("user")
+	var user models.User
+	if usernameString, ok := username.(string); ok {
+		user, _ = services.GetUserByUsername(usernameString)
+	} else {
+		c.Redirect(constant.DirectStatus, "/login")
+	}
+	// var post models.Post
+	idPost, _ := strconv.Atoi(c.PostForm("id"))
+	messageComment := c.PostForm("comment")
+
+	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.ActiveNumber, messageComment) == nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Active status post successfully!"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Active status post fail!"})
+	}
+}
+
+func DeActiveStatusPost(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("user", session_name)
+	username := session.Get("user")
+	var user models.User
+	if usernameString, ok := username.(string); ok {
+		user, _ = services.GetUserByUsername(usernameString)
+	} else {
+		c.Redirect(constant.DirectStatus, "/login")
+	}
+	idPost, _ := strconv.Atoi(c.PostForm("id"))
+	messageComment := c.PostForm("comment")
+	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.DeactiveNumber, messageComment) == nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "DeActive status post successfully!"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Deactive status post fail!"})
+	}
+}
+
+func DeletePost(c *gin.Context) {
+	idPost, _ := strconv.Atoi(c.PostForm("id"))
+	if services.DeletePost(idPost) == nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete this post successfully"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Delete this post fail"})
+	}
+}
+
+func UpdateContentPost(c *gin.Context) {
+	id, _ := strconv.Atoi(c.PostForm("id"))
+	title := c.PostForm("title")
+	topic := c.PostForm("topic")
+	description := c.PostForm("description")
+	content := c.PostForm("content")
+	tag := c.PostForm("tag")
+	if strings.Trim(title, " ") == "" || strings.Trim(topic, " ") == "" || description == "" || strings.Trim(content, " ") == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "error": "Nhập đầy đủ thông tin"})
+	} else {
+		if services.UpdateContentPost(id, title, topic, description, content, tag) == nil {
+			c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "update post successfully!"})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "update post fail!"})
+		}
+	}
+}
+
+// func GetChartPost(c *gin.Context) {
+// 	if result, err := services.GetCountPostInYear(); err == nil {
+// 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": result})
+// 		return
+// 	}
+// 	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest})
+
+// }

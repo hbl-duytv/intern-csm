@@ -19,4 +19,5 @@ func init() {
 	} else {
 		fmt.Println("connect db sucessfully")
 	}
+	DB.SingularTable(true)
 }

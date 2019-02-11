@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/gorilla/sessions"
 	"github.com/hbl-duytv/intern-csm/routers"
 
 	"github.com/gin-gonic/gin"
@@ -31,12 +30,10 @@ func TestLogin(t *testing.T) {
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	r.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	router.ServeHTTP(resp, r)
-	if resp.Code != constant.DIRECT_STATUS {
+	if resp.Code != constant.DirectStatus {
 		t.Errorf("error status code: %v", resp.Code)
 	}
-
 }
-
 func TestSendConfirmRegister(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
@@ -57,7 +54,6 @@ func TestSendConfirmRegister(t *testing.T) {
 	}
 
 }
-
 func TestCheckUserExist(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
@@ -96,7 +92,6 @@ func TestCheckEmailExist(t *testing.T) {
 	}
 
 }
-
 func TestActiveEditorUser(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
@@ -133,7 +128,6 @@ func TestDeactiveEditorUser(t *testing.T) {
 	}
 
 }
-
 func TestDeleteUser(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
@@ -171,7 +165,6 @@ func TestActiveStatusPost(t *testing.T) {
 	}
 
 }
-
 func TestDeActiveStatusPost(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
@@ -257,7 +250,6 @@ func TestUpdateContentPost(t *testing.T) {
 
 /*METHOD GET*/
 func TestRouterIndex(t *testing.T) {
-
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
 	router.LoadHTMLGlob("/home/hblab/work/src/github.com/hbl-duytv/intern-csm/views/html/*")
@@ -291,9 +283,6 @@ func TestRegisterSuccess(t *testing.T) {
 	}
 
 }
-
-var store = sessions.NewCookieStore([]byte("secret"))
-
 func TestRenderEditorManagement(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routers.InitRouter()
@@ -310,7 +299,7 @@ func TestRenderEditorManagement(t *testing.T) {
 	r1.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	r1.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	router.ServeHTTP(resp1, r1)
-	if resp1.Code != constant.DIRECT_STATUS {
+	if resp1.Code != constant.DirectStatus {
 
 	}
 	resp := httptest.NewRecorder()

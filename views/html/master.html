@@ -18,6 +18,9 @@
     {{else if eq .index 3}}
     <!-- update post-->
     {{template "update-post" .}}
+    {{else if eq .index 4}}
+    <!-- chart -->
+    {{template "chart" .}}
     {{end}}
     <!--JS-->
     {{template "footer-lib" .}}

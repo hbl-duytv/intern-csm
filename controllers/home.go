@@ -18,6 +18,6 @@ func Home(c *gin.Context) {
 			c.HTML(http.StatusOK, "master.html", gin.H{"user": user, "index": -1, "title": "Home", "month": user.CreatedAt.Month(), "year": user.CreatedAt.Year()})
 		}
 	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/login")
+		c.Redirect(constant.DirectStatus, "/login")
 	}
 }

@@ -5,6 +5,7 @@
 <script src="/views/lib/jquery.slimscroll.min.js"></script>
 <script src="/views/lib/adminlte.min.js"></script>
 <script src="/views/lib/jquery.validate.min.js"></script>
+
 {{if eq .index 0}}
 <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
 <script src="/views/js/create-post.js"></script>
@@ -22,5 +23,8 @@
 {{else if eq .index 3}}
 <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
 <script src="/views/js/update-post.js"></script>
+{{else if eq .index -1}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+<script src="/views/js/chart.js"></script>
 {{end}}
 {{end}}

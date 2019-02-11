@@ -36,6 +36,7 @@
         <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
         {{else}}
         <!--admin permission-->
+        <li><a id="chart-post" href=""><i class="fa fa-area-chart"></i><span>Biểu đồ thống kế bài biết</span></a></li>
         <li><a href="/get-post-admin-permission2"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
         <li><a href="/editor-management2"><i class="fa fa-users"></i> <span>Quản lý biên tập viên</span></a></li>
         {{end}}
@@ -123,6 +124,12 @@
           </div>
         </div>
         <!-- ./col -->
+      </div>
+
+      <div class="row">
+        <div class="col-lg-3 col-xs-6">
+          <canvas id="myChart" width="400px" height="400px"></canvas>
+        </div>
       </div>
     </section>
     <!-- /.content -->

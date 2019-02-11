@@ -13,20 +13,22 @@ import (
 
 func ActiveEditorUser(c *gin.Context) {
 	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.UpdateStatusUser(idUser, constant.ACTIVE_NUMBER) == nil {
+	if services.UpdateStatusUser(idUser, constant.ActiveNumber) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
 	}
 }
+
 func DeactiveEditorUser(c *gin.Context) {
 	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.UpdateStatusUser(idUser, constant.DEACTIVE_NUMBER) == nil {
+	if services.UpdateStatusUser(idUser, constant.DeactiveNumber) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Updated status user fail!"})
 	}
 }
+
 func DeleteUser(c *gin.Context) {
 	idUser, _ := strconv.Atoi(c.PostForm("id"))
 	if services.DeleteUser(idUser) == nil {
@@ -35,6 +37,7 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Delete user fail!"})
 	}
 }
+
 func CreateUser(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
@@ -48,13 +51,14 @@ func CreateUser(c *gin.Context) {
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
-		if services.CreateAccount(username, password, email, name, gender, birthday, phoneNumber, status, constant.DEACTIVE_NUMBER, token) == nil {
+		if services.CreateAccount(username, password, email, name, gender, birthday, phoneNumber, status, constant.DeactiveNumber, token) == nil {
 			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User create success!"})
 		}
 	}
 }
+
 func RenderEditorManagement(c *gin.Context) {
 	editors, _ := services.GetAllEditorUser()
 	session := sessions.Default(c)
@@ -66,7 +70,7 @@ func RenderEditorManagement(c *gin.Context) {
 			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
 		}
 	} else {
-		c.Redirect(constant.DIRECT_STATUS, "/home")
+		c.Redirect(constant.DirectStatus, "/home")
 	}
 }
 
@@ -82,6 +86,6 @@ func RenderEditorManagement(c *gin.Context) {
 // 			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
 // 		}
 // 	} else {
-// 		c.Redirect(constant.DIRECT_STATUS, "/home")
+// 		c.Redirect(constant.DirectStatus, "/home")
 // 	}
 // }

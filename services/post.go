@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hbl-duytv/intern-csm/constant"
 	"github.com/hbl-duytv/intern-csm/models"
 )
 
@@ -14,7 +15,7 @@ func GetPostWithAdminPermission() ([]models.TransformPost, error) {
 		return transformPosts, err
 	}
 	for _, v := range posts {
-		if user, err := GetUserByID((v.Creator)); err == nil {
+		if user, err := GetUserByID((v.CreatorID)); err == nil {
 			transformPosts = append(transformPosts, models.TransformPost{
 				v.ID,
 				user.Name,
@@ -31,15 +32,16 @@ func GetPostWithAdminPermission() ([]models.TransformPost, error) {
 	}
 	return transformPosts, nil
 }
+
 func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
 	var tranformPosts []models.TransformPost
 	var posts []models.Post
-	if err := DB.Find(&posts, "creator=?", id).Error; err != nil {
+	if err := DB.Find(&posts, "creator_id=?", id).Error; err != nil {
 		fmt.Println(err)
 		return tranformPosts, err
 	}
 	for _, v := range posts {
-		if user, err := GetUserByID((v.Creator)); err == nil {
+		if user, err := GetUserByID((v.CreatorID)); err == nil {
 			tranformPosts = append(tranformPosts, models.TransformPost{
 				v.ID,
 				user.Name,
@@ -56,6 +58,7 @@ func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
 	}
 	return tranformPosts, nil
 }
+
 func GetPostById(id int) (models.Post, error) {
 	var post models.Post
 	if err := DB.Debug().Find(&post, "id=?", id).Error; err != nil {
@@ -63,6 +66,7 @@ func GetPostById(id int) (models.Post, error) {
 	}
 	return post, nil
 }
+
 func DeletePost(id int) error {
 	var post models.Post
 	if err := DB.Where("id=?", id).Find(&post).Error; err != nil {
@@ -70,8 +74,8 @@ func DeletePost(id int) error {
 	}
 	DB.Delete(post)
 	return nil
-
 }
+
 func UpdateContentPost(id int, title, topic, des, content, tag string) error {
 	var post models.Post
 	if err := DB.Where("id=?", id).Find(&post).Error; err != nil {
@@ -87,6 +91,7 @@ func UpdateContentPost(id int, title, topic, des, content, tag string) error {
 	}
 	return nil
 }
+
 func ChangeStatusPostWithComment(idPost, idUser, status int, mess string) error {
 	var post models.Post
 	if err := DB.First(&post, idPost).Error; err != nil {
@@ -105,9 +110,10 @@ func ChangeStatusPostWithComment(idPost, idUser, status int, mess string) error 
 	}
 	return nil
 }
+
 func CreatePost(idCreator int, title, topic, des, content, tag string) error {
 	newPost := models.Post{
-		Creator:     idCreator,
+		CreatorID:   idCreator,
 		Title:       title,
 		Topic:       topic,
 		Description: des,
@@ -121,4 +127,24 @@ func CreatePost(idCreator int, title, topic, des, content, tag string) error {
 		return err
 	}
 	return nil
+}
+
+func GetCountPostInYear() ([]int, error) {
+	var result []int
+	for i := 1; i <= constant.CountMonth; i++ {
+		if count, err := GetCountPostInMonth(i); err == nil {
+			result = append(result, count)
+		}
+	}
+	return result, nil
+}
+
+func GetCountPostInMonth(month int) (int, error) {
+	var posts []models.Post
+	var count int
+	if err := DB.Where("MONTH(created_at)=?", month).Find(&posts).Count(&count).Error; err != nil {
+		return count, err
+	}
+	return count, nil
+
 }

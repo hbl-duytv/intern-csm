@@ -4,7 +4,7 @@ import "time"
 
 type Post struct {
 	ID          int       `json:"id"`
-	Creator     int       `json:"creator"`
+	CreatorID   int       `json:"creator_id"`
 	Title       string    `json:"title"`
 	Topic       string    `json:"topic"`
 	Description string    `json:"description"`
@@ -14,9 +14,10 @@ type Post struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 	Tag         string    `json:"tag"`
 }
+
 type TransformPost struct {
 	ID          int       `json:"id"`
-	Creator     string    `json:"creator"`
+	CreatorID   string    `json:"creator_id"`
 	Title       string    `json:"title"`
 	Topic       string    `json:"topic"`
 	Description string    `json:"description"`

@@ -5,7 +5,7 @@ import (
 
 	"github.com/hbl-duytv/intern-csm/services"
 
-	"github.com/hbl-duytv/intern-csm/lib_fn"
+	"github.com/hbl-duytv/intern-csm/libfn"
 	"github.com/hbl-duytv/intern-csm/models"
 )
 
@@ -21,8 +21,8 @@ func TestGetAllEditorUser(t *testing.T) {
 			Gender:      "Nam",
 			PhoneNumber: 235235123,
 			Status:      1,
-			CreatedAt:   lib_fn.ParseTime("2018-05-25 10:36:13"),
-			UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+			CreatedAt:   libfn.ParseTime("2018-05-25 10:36:13"),
+			UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 			Token:       "d397d6dd4c1df859c6f5530006dd561357d95cd4360715110e8df263416fc467",
 			Confirm:     1,
 			Birthday:    "25/09/1994",
@@ -38,8 +38,8 @@ func TestGetAllEditorUser(t *testing.T) {
 			Gender:      "Nam",
 			PhoneNumber: 12345678,
 			Status:      1,
-			CreatedAt:   lib_fn.ParseTime("2019-01-25 10:44:47"),
-			UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+			CreatedAt:   libfn.ParseTime("2019-01-25 10:44:47"),
+			UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 			Token:       "08970496b6310d4e2e84c99b4064dccc9b45195d374724f65886aa5bff97e2c5",
 			Confirm:     1,
 			Birthday:    "06/06/1993",
@@ -55,8 +55,8 @@ func TestGetAllEditorUser(t *testing.T) {
 			Gender:      "Nam",
 			PhoneNumber: 12345678,
 			Status:      1,
-			CreatedAt:   lib_fn.ParseTime("2019-01-25 11:12:08"),
-			UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+			CreatedAt:   libfn.ParseTime("2019-01-25 11:12:08"),
+			UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 			Token:       "d879966df1d5a4d57208916aca869157148ac5d025d15ec678f4d8bbbda340e3",
 			Confirm:     1,
 			Birthday:    "03/03/1993",
@@ -64,7 +64,7 @@ func TestGetAllEditorUser(t *testing.T) {
 		},
 	}
 	if input, err := services.GetAllEditorUser(); err == nil {
-		if !lib_fn.CompareTwoArrUser(want, input) {
+		if !libfn.CompareTwoArrUser(want, input) {
 			t.Error("get all editor user failed")
 		}
 	} else {
@@ -72,7 +72,6 @@ func TestGetAllEditorUser(t *testing.T) {
 	}
 
 }
-
 func TestGetUserByToken(t *testing.T) {
 	want := models.User{
 		ID:          40,
@@ -84,15 +83,15 @@ func TestGetUserByToken(t *testing.T) {
 		Gender:      "Nam",
 		PhoneNumber: 235235123,
 		Status:      1,
-		CreatedAt:   lib_fn.ParseTime("2018-05-25 10:36:13"),
-		UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+		CreatedAt:   libfn.ParseTime("2018-05-25 10:36:13"),
+		UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 		Token:       "d397d6dd4c1df859c6f5530006dd561357d95cd4360715110e8df263416fc467",
 		Confirm:     1,
 		Birthday:    "25/09/1994",
 		TimeConfirm: 8,
 	}
 	if input, err := services.GetUserByToken("d397d6dd4c1df859c6f5530006dd561357d95cd4360715110e8df263416fc467"); err == nil {
-		if !lib_fn.CompareTwoUser(want, input) {
+		if !libfn.CompareTwoUser(want, input) {
 			t.Error("get user by token failed")
 		}
 	} else {
@@ -111,15 +110,15 @@ func TestGetUserByUsername(t *testing.T) {
 		Gender:      "Nam",
 		PhoneNumber: 235235123,
 		Status:      1,
-		CreatedAt:   lib_fn.ParseTime("2018-05-25 10:36:13"),
-		UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+		CreatedAt:   libfn.ParseTime("2018-05-25 10:36:13"),
+		UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 		Token:       "d397d6dd4c1df859c6f5530006dd561357d95cd4360715110e8df263416fc467",
 		Confirm:     1,
 		Birthday:    "25/09/1994",
 		TimeConfirm: 8,
 	}
 	if input, err := services.GetUserByUsername("vip1"); err == nil {
-		if !lib_fn.CompareTwoUser(want, input) {
+		if !libfn.CompareTwoUser(want, input) {
 			t.Error("get user by username failed")
 		}
 	} else {
@@ -138,15 +137,15 @@ func TestGetUserByEmail(t *testing.T) {
 		Gender:      "Nam",
 		PhoneNumber: 235235123,
 		Status:      1,
-		CreatedAt:   lib_fn.ParseTime("2018-05-25 10:36:13"),
-		UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+		CreatedAt:   libfn.ParseTime("2018-05-25 10:36:13"),
+		UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 		Token:       "d397d6dd4c1df859c6f5530006dd561357d95cd4360715110e8df263416fc467",
 		Confirm:     1,
 		Birthday:    "25/09/1994",
 		TimeConfirm: 8,
 	}
 	if input, err := services.GetUserByEmail("vip1@gmail.com"); err == nil {
-		if !lib_fn.CompareTwoUser(input, want) {
+		if !libfn.CompareTwoUser(input, want) {
 			t.Error("get user by email failed")
 		}
 	} else {
@@ -172,15 +171,15 @@ func TestGetUserByID(t *testing.T) {
 		Gender:      "Nam",
 		PhoneNumber: 12345678,
 		Status:      1,
-		CreatedAt:   lib_fn.ParseTime("2019-01-25 11:12:08"),
-		UpdatedAt:   lib_fn.ParseTime("2019-01-31 14:27:54"),
+		CreatedAt:   libfn.ParseTime("2019-01-25 11:12:08"),
+		UpdatedAt:   libfn.ParseTime("2019-01-31 14:27:54"),
 		Token:       "d879966df1d5a4d57208916aca869157148ac5d025d15ec678f4d8bbbda340e3",
 		Confirm:     1,
 		Birthday:    "03/03/1993",
 		TimeConfirm: 8,
 	}
 	if input, err := services.GetUserByID(44); err == nil {
-		if !lib_fn.CompareTwoUser(input, want) {
+		if !libfn.CompareTwoUser(input, want) {
 			t.Error("get user by id failed")
 		}
 	} else {
@@ -189,13 +188,9 @@ func TestGetUserByID(t *testing.T) {
 }
 
 func TestConfirmRegisterUser(t *testing.T) {
-	if user, err := services.GetUserByID(44); err == nil {
-		input := services.ConfirmRegisterUser(&user)
-		if input != nil {
-			t.Errorf("confirm register user failed: %s", input)
-		}
-	} else {
-		t.Errorf("error not found: %s", err)
+	err := services.ConfirmRegisterUser(44)
+	if err != nil {
+		t.Errorf("confirm register user failed: %v", err)
 	}
 
 }
@@ -204,9 +199,7 @@ func TestCreateUser(t *testing.T) {
 	if input != nil {
 		t.Errorf("create user failed: %s", input)
 	}
-
 }
-
 func TestDeleteUser(t *testing.T) {
 	input := services.DeleteUser(49)
 	if input != nil {
@@ -225,15 +218,15 @@ func TestRequireLogin(t *testing.T) {
 		Gender:      "Nam",
 		PhoneNumber: 235235123,
 		Status:      1,
-		CreatedAt:   lib_fn.ParseTime("2018-05-25 10:36:13"),
-		UpdatedAt:   lib_fn.ParseTime("2019-01-29 16:14:02"),
+		CreatedAt:   libfn.ParseTime("2018-05-25 10:36:13"),
+		UpdatedAt:   libfn.ParseTime("2019-01-29 16:14:02"),
 		Token:       "d397d6dd4c1df859c6f5530006dd561357d95cd4360715110e8df263416fc467",
 		Confirm:     1,
 		Birthday:    "25/09/1994",
 		TimeConfirm: 8,
 	}
 	if input, err := services.RequireLogin("vip1", "123456"); err == nil {
-		if !lib_fn.CompareTwoUser(want, input) {
+		if !libfn.CompareTwoUser(want, input) {
 			t.Error("require login failed")
 		}
 	} else {
@@ -251,26 +244,15 @@ func TestGetTimeCreateUSer(t *testing.T) {
 		t.Errorf("error not found: %s", err)
 	}
 }
-func TestCheckTimeToConfirmUser(t *testing.T) {
-	user := models.User{
-		ID:          48,
-		Username:    "trungduc081",
-		Password:    "e10adc3949ba59abbe56e057f20f883e",
-		Email:       "nguyentrugduc248@gmail.com",
-		Type:        0,
-		Name:        "vip1",
-		Gender:      "Nam",
-		PhoneNumber: 972471462,
-		Status:      1,
-		CreatedAt:   lib_fn.ParseTime("2019-01-31 14:40:37"),
-		UpdatedAt:   lib_fn.ParseTime("2019-01-31 14:40:37"),
-		Token:       "",
-		Confirm:     0,
-		Birthday:    "24/08/1996",
-		TimeConfirm: 8,
+func TestHasLimitTimeConfirm(t *testing.T) {
+	check, err := services.HasLimitTimeConfirm(48)
+	if err == nil {
+		if !check {
+			t.Error("limit time to confirm")
+		}
 	}
-	if !services.CheckTimeToConfirmUser(user) {
-		t.Error("limit time to confirm")
-	}
+	// if !services.HasLimitTimeConfirm(48) {
+	// 	t.Error("limit time to confirm")
+	// }
 
 }

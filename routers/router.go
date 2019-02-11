@@ -20,6 +20,7 @@ func InitRouter() *gin.Engine {
 	router.GET("/logout", controllers.Logout)
 	router.GET("/get-post-admin-permission2", controllers.RenderPostManagementAdmin)
 	router.GET("/get-post-editor-permission", controllers.RenderPostManagementEditor)
+	router.GET("/chart", controllers.RenderChart)
 	// post api router
 	router.POST("/register", controllers.SendConfirmRegister)
 	router.POST("/check-user-exist", controllers.CheckUserExist)

@@ -32,7 +32,14 @@ modalConfirmActive(function (confirm) {
         $.ajax({
             type: 'post',
             url: 'http://localhost:8000/update-content-post',
-            data: { 'id': idPost, 'title': title, 'topic': topic, 'description': description, 'content': content, 'tag': tag },
+            data: { 
+                'id': idPost, 
+                'title': title, 
+                'topic': topic, 
+                'description': description, 
+                'content': content, 
+                'tag': tag 
+            },
             dataType: 'json',
             success: function (result) {
                 if (result.status == 200) {

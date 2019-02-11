@@ -51,9 +51,9 @@
 
 $(document).ready(function () {
     $('#modal-btn-ok-noti').click(function () {
-
+        // ResetValue();
         $('#notification-modal').modal('toggle');
-        location.reload()
+        location.reload();
     });
 });
 CKEDITOR.replace('content-area');
@@ -70,8 +70,7 @@ var modalCreatePost = function (callback) {
         content = CKEDITOR.instances['content-area'].getData();
         tag = $('.input-tag').val();
         console.log(tag);
-        // tag = tag.replace(/,/g , ' ');
-        // console.log(tag);
+       
         $("#active-modal").modal('show');
     });
     $("#modal-btn-ok-active").on("click", function () {
@@ -89,7 +88,14 @@ modalCreatePost(function (confirm) {
         $.ajax({
             type: 'post',
             url: 'http://localhost:8000/create-post',
-            data: { 'creator': creator, 'title': title, 'topic': topic, 'description': description, 'content': content, 'tag': tag },
+            data: { 
+                'creator': creator, 
+                'title': title, 
+                'topic': topic, 
+                'description': description, 
+                'content': content, 
+                'tag': tag 
+            },
             dataType: 'json',
             success: function (result) {
                 if (result.status == 201) {

@@ -23,6 +23,7 @@ func AuthRequired() gin.HandlerFunc {
 		}
 	}
 }
+
 func AuthAdminRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
@@ -31,7 +32,7 @@ func AuthAdminRequired() gin.HandlerFunc {
 			c.Redirect(301, "login")
 		} else if usernameString, ok := username.(string); ok {
 			user, _ := services.GetUserByUsername(usernameString)
-			if user.Type == constant.ACTIVE_NUMBER {
+			if user.Type == constant.ActiveNumber {
 				c.Next()
 			} else {
 				c.JSON(http.StatusMethodNotAllowed, gin.H{"error": "User not allowed"})
