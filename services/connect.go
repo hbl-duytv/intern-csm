@@ -8,16 +8,25 @@ import (
 )
 
 var DB *gorm.DB
+var DBTest *gorm.DB
 
 func init() {
 	//open a db connection
 	var err error
-	DB, err = gorm.Open("mysql", "trungduc08:123456789@/cms_db?charset=utf8&parseTime=True&loc=Local")
+	DB, err = gorm.Open("mysql", "root:@/cms_db?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		fmt.Printf("err: %v", err)
 		panic("failed to connect database")
 	} else {
 		fmt.Println("connect db sucessfully")
 	}
-	DB.SingularTable(true)
+	var errTest error
+	DBTest, errTest = gorm.Open("mysql", "root:@/cms_test?charset=utf8&parseTime=True&loc=Local")
+	if errTest != nil {
+		fmt.Printf("err: %v", errTest)
+		panic("failed to connect database test")
+	} else {
+		fmt.Println("connect db test sucessfully")
+	}
+	// DB.SingularTable(true)
 }

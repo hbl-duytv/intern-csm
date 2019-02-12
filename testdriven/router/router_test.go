@@ -2,7 +2,6 @@ package testdriven
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -39,6 +38,7 @@ func TestSendConfirmRegister(t *testing.T) {
 	router := routers.InitRouter()
 	resp := httptest.NewRecorder()
 	data := url.Values{}
+	dataCorrect := "Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"
 	data.Set("username", "trungduc09")
 	data.Set("password", "123456")
 	data.Set("email", "nguyentrugduc248@gmail.com")
@@ -49,10 +49,9 @@ func TestSendConfirmRegister(t *testing.T) {
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	r.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	router.ServeHTTP(resp, r)
-	if resp.Code != http.StatusOK {
-		t.Errorf("error status code: %v", resp.Code)
+	if resp.Body.String() != dataCorrect {
+		t.Errorf("error status code: %s", resp.Body.String())
 	}
-
 }
 func TestCheckUserExist(t *testing.T) {
 	gin.SetMode(gin.TestMode)
@@ -300,22 +299,16 @@ func TestRenderEditorManagement(t *testing.T) {
 	r1.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	router.ServeHTTP(resp1, r1)
 	if resp1.Code != constant.DirectStatus {
-
+		t.Errorf("Error! , resp1 : %v \n", resp1)
 	}
 	resp := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", "/editor-management2", nil)
 	if err != nil {
 		t.Errorf("Couldn't create request: %v \n", err)
 	}
-
 	router.ServeHTTP(resp, req)
-
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	defer fmt.Println(resp.Body)
 	if resp.Code == http.StatusOK {
 		t.Errorf("want status code: %d but receive status code: %v", http.StatusOK, resp.Body)
-	} else {
-
 	}
-
 }

@@ -73,19 +73,3 @@ func RenderEditorManagement(c *gin.Context) {
 		c.Redirect(constant.DirectStatus, "/home")
 	}
 }
-
-// func RenderEditorManagement3(c *gin.Context) {
-// 	editors, _ := services.GetAllEditorUser()
-// 	session := sessions.Default(c)
-// 	session.Set("user", session_name)
-// 	// session.Set("user", "admin")
-// 	username := session.Get("user")
-// 	fmt.Printf("type: %T", username)
-// 	if usernameString, ok := username.(string); ok {
-// 		if user, err := services.GetUserByUsername(usernameString); err == nil {
-// 			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
-// 		}
-// 	} else {
-// 		c.Redirect(constant.DirectStatus, "/home")
-// 	}
-// }
