@@ -25,15 +25,12 @@ func RenderPostManagementAdmin(c *gin.Context) {
 			}
 			return
 		}
-
 	}
 	c.Redirect(constant.DirectStatus, "/home")
-
 }
 
 func RenderPostManagementEditor(c *gin.Context) {
 	var posts []models.TransformPost
-
 	session := sessions.Default(c)
 	username := session.Get("user")
 	if user, err := services.GetUserByUsername(username.(string)); err == nil {
@@ -41,12 +38,11 @@ func RenderPostManagementEditor(c *gin.Context) {
 			month, year, _ := services.GetTimeCreateUSer(user.ID)
 			c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
 		}
-	} else {
-		c.Redirect(constant.DirectStatus, "/home")
+		return
 	}
+	c.Redirect(constant.DirectStatus, "/home")
 }
 func RenderCreatePost(c *gin.Context) {
-
 	session := sessions.Default(c)
 	username := session.Get("user")
 	if user, err := services.GetUserByUsername(username.(string)); err == nil {
@@ -59,19 +55,17 @@ func RenderCreatePost(c *gin.Context) {
 
 func RenderUpdatePost(c *gin.Context) {
 	idPost, _ := strconv.Atoi(c.Param("id"))
-
 	if post, err := services.GetPostById(idPost); err == nil {
 		month, year, _ := services.GetTimeCreateUSer(post.Creator)
 		c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "post": post, "index": 3, "title": "Update Post"})
 		return
 	}
 	c.Redirect(constant.DirectStatus, "/home")
-
 }
+
 func RenderDetailPost(c *gin.Context) {
 	idPost, _ := strconv.Atoi(c.Param("id"))
 	var usernames []string
-
 	post, _ := services.GetPostById(idPost)
 	comments, _ := services.GetCommentsById(idPost)
 	for _, v := range comments {
@@ -79,10 +73,9 @@ func RenderDetailPost(c *gin.Context) {
 		services.DB.Find(&user, "id=?", v.CommentatorID)
 		usernames = append(usernames, user.Name)
 	}
-
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "post": post, "comment": comments, "username": usernames})
-
 }
+
 func CreatePost(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
@@ -95,14 +88,13 @@ func CreatePost(c *gin.Context) {
 	fmt.Println(title, topic, description, content)
 	if strings.Trim(title, " ") == "" || strings.Trim(topic, " ") == "" || description == "" || strings.Trim(content, " ") == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "error": "Nhập đầy đủ thông tin"})
-	} else {
-		if services.CreatePost(creator, title, topic, description, content) == nil {
-			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "user": user, "message": "create post successfully!"})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "user": user, "message": "create post fail!"})
-		}
-
+		return
 	}
+	if services.CreatePost(creator, title, topic, description, content) == nil {
+		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "user": user, "message": "create post successfully!"})
+		return
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "user": user, "message": "create post fail!"})
 
 }
 func ActiveStatusPost(c *gin.Context) {

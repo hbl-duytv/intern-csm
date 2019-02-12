@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/hbl-duytv/intern-csm/models"
+
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/constant"
@@ -66,11 +68,28 @@ func SendConfirmRegister(c *gin.Context) {
 	password := c.PostForm("password")
 	email := c.PostForm("email")
 	token := helper.GetToken(username)
-	if services.CreateAccount(username, password, email, "", "", "", constant.DeactiveNumber, constant.DeactiveNumber, constant.DeactiveNumber, token, constant.DeactiveNumber) == nil {
+	newUser := models.User{
+		Username:    username,
+		Password:    password,
+		Email:       email,
+		Name:        "",
+		Gender:      "",
+		Birthday:    "",
+		PhoneNumber: constant.DeactiveNumber,
+		Status:      constant.DeactiveNumber,
+		Type:        constant.TypeEditor,
+		Token:       token,
+		Confirm:     constant.DeactiveNumber,
+	}
+	if err := services.CreateAccount(&newUser); err == nil {
 		urlConfirm := "http://localhost:8000/confirm-register/" + token
 		massageEmailConfirm := "<div>Bạn đã đăng ký tài khoản biên tập viên, vui lòng xác nhận :</div><a href= '" + urlConfirm + "'><button>Xác nhận đăng ký</button></a>"
-		services.SendMail(email, massageEmailConfirm)
-		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"))
+		if err := services.SendMail(email, massageEmailConfirm); err == nil {
+			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thành công, vui lòng check mail để xác nhận đăng ký tài khoản!"))
+			return
+		}
+		c.Data(http.StatusBadRequest, "text/html; charset=utf-8", []byte("Gửi mail xác nhận thất bại!"))
+
 	}
 
 }

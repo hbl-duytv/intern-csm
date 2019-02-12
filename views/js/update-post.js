@@ -13,7 +13,7 @@ var modalConfirmActive = function (callback) {
         topic = $('#topic').val()
         description = $('#description').val();
         content = CKEDITOR.instances['content-area'].getData();
-        // content = $('.content-area').val()
+        
         $("#active-modal").modal('show');
     });
     $("#modal-btn-ok-active").on("click", function () {
@@ -31,7 +31,12 @@ modalConfirmActive(function (confirm) {
         $.ajax({
             type: 'post',
             url: 'http://localhost:8000/update-content-post',
-            data: { 'id': idPost, 'title': title, 'topic': topic, 'description': description, 'content': content },
+            data: { 
+                'id': idPost, 
+                'title': title, 
+                'topic': topic, 
+                'description': description, 
+                'content': content },
             dataType: 'json',
             success: function (result) {
                 if (result.status == 200) {
@@ -53,10 +58,3 @@ modalConfirmActive(function (confirm) {
 
     }
 });
-function ResetValue() {
-    // title = $('#title').val("");
-    // topic = $('#topic').val("");
-    // description = $('#description').val("");
-    // CKEDITOR.instances['content-area'].setData("");
-    console.log("nhay vao day");
-}

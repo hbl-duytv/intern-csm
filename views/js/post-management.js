@@ -80,8 +80,6 @@ modalConfirmDelete(function (confirm) {
                 }
             }
         });
-    } else {
-        // $("#result").html("NO CONFIRMADO");
     }
 });
 var modalDeActivePost = function (callback) {
@@ -121,8 +119,6 @@ modalDeActivePost(function (confirm) {
             }
 
         });
-    } else {
-
     }
 });
 $('.btn-update-post').click(function () {
@@ -140,7 +136,7 @@ var modalDetailPost = function (callback) {
     });
 
 };
-// editor = CKEDITOR.replace('content-area');
+
 modalDetailPost(function (confirm) {
 
     if (confirm) {
@@ -167,13 +163,9 @@ modalDetailPost(function (confirm) {
                         //var detail_comment = ("<div name='comment-detail' class='comment-detail-" + i + " form-group'><label>Comment " + (i + 1) + "</label><input disabled type='comment' name='comment' id='comment' tabindex='1' class='form-control ' value = " + "'" + result.comment[i]["message"] + " - " + result.comment[i]["created_at"] + " - " + result.username[i] + "'" + " required /></div>");
                         $('#detail-post-comment').append(detail_comment);
                     }
-                } else {
-
                 }
             }
         });
-    } else {
-
     }
 });
 

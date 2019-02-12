@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/hbl-duytv/intern-csm/models"
+
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/constant"
@@ -22,7 +24,7 @@ func ActiveEditorUser(c *gin.Context) {
 }
 func DeactiveEditorUser(c *gin.Context) {
 	idUser, _ := strconv.Atoi(c.PostForm("id"))
-	if services.UpdateStatusUser(idUser, constant.DeactiveNumber) == nil {
+	if services.UpdateStatusUser(idUser, constant.TypeEditor) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Updated status user successfully!"})
 		return
 	}
@@ -49,11 +51,24 @@ func CreateUser(c *gin.Context) {
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
-		if services.CreateAccount(username, password, email, name, gender, birthday, phoneNumber, status, constant.DeactiveNumber, token, constant.DeactiveNumber) == nil {
-			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User create success!"})
+		newUser := models.User{
+			Username:    username,
+			Password:    helper.GetMD5Hash(password),
+			Email:       email,
+			Name:        name,
+			Gender:      gender,
+			Birthday:    birthday,
+			PhoneNumber: phoneNumber,
+			Status:      status,
+			Type:        constant.TypeEditor,
+			Token:       token,
+			Confirm:     constant.DeactiveNumber,
 		}
+		if services.CreateAccount(&newUser) == nil {
+			c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User create success!"})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User create success!"})
 
 	}
 }

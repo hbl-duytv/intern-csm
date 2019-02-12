@@ -17,7 +17,7 @@ func InitRouter(router *gin.Engine) {
 
 	router.GET("/confirm-register/:token", controllers.RegisterSuccess)
 	router.GET("/logout", controllers.Logout)
-	router.GET("/get-post-admin-permission2", controllers.RenderPostManagementAdmin)
+	router.GET("/get-post-admin-permission3", controllers.RenderPostManagementAdmin)
 	router.GET("/get-post-editor-permission", controllers.RenderPostManagementEditor)
 	// post api router
 	router.POST("/register", controllers.SendConfirmRegister)
@@ -37,7 +37,7 @@ func InitRouter(router *gin.Engine) {
 		privateRouter.POST("/deactive-editor", controllers.DeactiveEditorUser)
 		privateRouter.POST("/delete-user", controllers.DeleteUser)
 		privateRouter.POST("/delete-post", controllers.DeletePost)
-		// privateRouter.GET("/editor-management", controllers.RenderEditorManagement)
+
 		privateRouter.GET("/render-create-post", controllers.RenderCreatePost)
 		privateRouter.GET("/render-update-post/:id", controllers.RenderUpdatePost)
 		privateRouter.GET("/render-detail-post/:id", controllers.RenderDetailPost)

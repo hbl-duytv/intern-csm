@@ -1,58 +1,66 @@
 package services
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/hbl-duytv/intern-csm/models"
 )
 
 func GetPostWithAdminPermission() ([]models.TransformPost, error) {
-	var posts []models.Post
-	var transformPosts []models.TransformPost
-	if err := DB.Find(&posts).Error; err != nil {
-		return transformPosts, err
+	var posts []models.TransformPost
+	rows, err := DB.Table("post").Select("post.id, user.name, post.title, post.topic, post.description, post.content, post.status, post.created_at, post.updated_at").Joins("join user on user.id = post.creator_id").Rows()
+	if err != nil {
+		return posts, err
 	}
-	for _, v := range posts {
-		if user, err := GetUserByID((v.Creator)); err == nil {
-			transformPosts = append(transformPosts, models.TransformPost{
-				v.ID,
-				user.Name,
-				v.Title,
-				v.Topic,
-				v.Description,
-				v.Content,
-				v.Status,
-				v.CreatedAt,
-				v.UpdatedAt,
-			})
+	for rows.Next() {
+		var id int
+		var name, title, topic, description, content string
+		var status int
+		var createdAt, updatedAt time.Time
+		rows.Scan(&id, &name, &title, &topic, &description, &content, &status, &createdAt, &updatedAt)
+		post := models.TransformPost{
+			ID:          id,
+			Creator:     name,
+			Title:       title,
+			Topic:       topic,
+			Description: description,
+			Content:     content,
+			Status:      status,
+			CreatedAt:   createdAt,
+			UpdatedAt:   updatedAt,
 		}
+		posts = append(posts, post)
 	}
-	return transformPosts, nil
+	return posts, nil
 }
+
 func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
-	var tranformPosts []models.TransformPost
-	var posts []models.Post
-	if err := DB.Find(&posts, "creator=?", id).Error; err != nil {
-		fmt.Println(err)
-		return tranformPosts, err
+	var posts []models.TransformPost
+	rows, err := DB.Table("post").Select("post.id, user.name, post.title, post.topic, post.description, post.content, post.status, post.created_at, post.updated_at").Joins("join user on user.id = post.creator_id where post.creator_id=?", id).Rows()
+	if err != nil {
+		return posts, err
 	}
-	for _, v := range posts {
-		if user, err := GetUserByID((v.Creator)); err == nil {
-			tranformPosts = append(tranformPosts, models.TransformPost{
-				v.ID,
-				user.Name,
-				v.Title,
-				v.Topic,
-				v.Description,
-				v.Content,
-				v.Status,
-				v.CreatedAt,
-				v.UpdatedAt,
-			})
+	for rows.Next() {
+		var id int
+		var name, title, topic, description, content string
+		var status int
+		var createdAt, updatedAt time.Time
+		rows.Scan(&id, &name, &title, &topic, &description, &content, &status, &createdAt, &updatedAt)
+		post := models.TransformPost{
+			ID:          id,
+			Creator:     name,
+			Title:       title,
+			Topic:       topic,
+			Description: description,
+			Content:     content,
+			Status:      status,
+			CreatedAt:   createdAt,
+			UpdatedAt:   updatedAt,
 		}
+		posts = append(posts, post)
 	}
-	return tranformPosts, nil
+	return posts, nil
+
 }
 func GetPostById(id int) (models.Post, error) {
 	var post models.Post

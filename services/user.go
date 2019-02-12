@@ -91,26 +91,12 @@ func RequireLogin(username, password string) (models.User, error) {
 	}
 	return user, nil
 }
-func CreateAccount(username string, password string, email string, name string, gender string, birthday string, phoneNumber int, status int, typeUser int, token string, confirm int) error {
-	passwordMD5 := helper.GetMD5Hash(password)
-
-	newUser := models.User{
-		Username:    username,
-		Password:    passwordMD5,
-		Name:        name,
-		Gender:      gender,
-		Birthday:    birthday,
-		PhoneNumber: phoneNumber,
-		Email:       email,
-		Type:        typeUser,
-		Status:      status,
-		Token:       token,
-		Confirm:     confirm,
-	}
+func CreateAccount(newUser *models.User) error {
 	if err := DB.Save(&newUser).Error; err != nil {
 		return err
 	}
 	return nil
+
 }
 func GetTimeCreateUSer(id int) (int, int, error) {
 	var user models.User
