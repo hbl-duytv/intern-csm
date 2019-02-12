@@ -6,7 +6,6 @@ import (
 
 	"github.com/hbl-duytv/intern-csm/models"
 
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/constant"
 	"github.com/hbl-duytv/intern-csm/helper"
@@ -48,6 +47,7 @@ func CreateUser(c *gin.Context) {
 	token := helper.GetToken(username)
 	if phoneNumber, error := strconv.Atoi(c.PostForm("phone_number")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Phone number error!"})
+
 	} else if status, error := strconv.Atoi(c.PostForm("status")); error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Status error!"})
 	} else {
@@ -75,17 +75,20 @@ func CreateUser(c *gin.Context) {
 
 func RenderEditorManagement(c *gin.Context) {
 
-	editors, _ := services.GetAllEditorUser()
-	session := sessions.Default(c)
-	username := session.Get("user")
+	editors, err := services.GetAllEditorUser()
+	if err != nil {
+		c.Redirect(http.StatusMovedPermanently, "/home")
+		return
+	}
+	username := services.GetCurrentUser(c)
 	if usernameString, ok := username.(string); ok {
 		if user, err := services.GetUserByUsername(usernameString); err == nil {
-			month, year, _ := services.GetTimeCreateUSer(user.ID)
-			c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "editors": editors, "user": user, "index": 1, "title": "Editor management"})
+
+			c.HTML(http.StatusOK, "master.html", gin.H{"month": user.CreatedAt.Month(), "year": user.CreatedAt.Year(), "editors": editors, "user": user, "index": 1, "title": "Editor management"})
 			return
 		}
 
 	}
-	c.Redirect(constant.DirectStatus, "/home")
+	c.Redirect(http.StatusMovedPermanently, "/home")
 
 }

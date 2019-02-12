@@ -16,7 +16,7 @@ func AuthRequired() gin.HandlerFunc {
 		user := session.Get("user")
 		if user == nil {
 			// redirect to login page when user not login
-			c.Redirect(constant.DirectStatus, "login")
+			c.Redirect(http.StatusMovedPermanently, "login")
 		} else {
 			// Continue down the chain to handler etc
 			c.Next()
@@ -28,7 +28,7 @@ func AuthAdminRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		username := session.Get("user")
 		if username == nil {
-			c.Redirect(constant.DirectStatus, "login")
+			c.Redirect(http.StatusMovedPermanently, "login")
 		} else if usernameString, ok := username.(string); ok {
 			user, _ := services.GetUserByUsername(usernameString)
 			if user.Type == constant.TypeAdmin {

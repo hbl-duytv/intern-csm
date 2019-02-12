@@ -1,63 +1,23 @@
 package services
 
 import (
-	"time"
-
 	"github.com/hbl-duytv/intern-csm/models"
 )
 
 func GetPostWithAdminPermission() ([]models.TransformPost, error) {
 	var posts []models.TransformPost
-	rows, err := DB.Table("post").Select("post.id, user.name, post.title, post.topic, post.description, post.content, post.status, post.created_at, post.updated_at").Joins("join user on user.id = post.creator_id").Rows()
+	err := DB.Debug().Table("post").Select("post.id as id, user.name as creator, post.title as title, post.topic as topic, post.description as description, post.content as content, post.status as status, post.created_at as created_at, post.updated_at as updated_at").Joins("join user on user.id = post.creator").Find(&posts).Error
 	if err != nil {
 		return posts, err
-	}
-	for rows.Next() {
-		var id int
-		var name, title, topic, description, content string
-		var status int
-		var createdAt, updatedAt time.Time
-		rows.Scan(&id, &name, &title, &topic, &description, &content, &status, &createdAt, &updatedAt)
-		post := models.TransformPost{
-			ID:          id,
-			Creator:     name,
-			Title:       title,
-			Topic:       topic,
-			Description: description,
-			Content:     content,
-			Status:      status,
-			CreatedAt:   createdAt,
-			UpdatedAt:   updatedAt,
-		}
-		posts = append(posts, post)
 	}
 	return posts, nil
 }
 
 func GetPostWithEditorPermission(id int) ([]models.TransformPost, error) {
 	var posts []models.TransformPost
-	rows, err := DB.Table("post").Select("post.id, user.name, post.title, post.topic, post.description, post.content, post.status, post.created_at, post.updated_at").Joins("join user on user.id = post.creator_id where post.creator_id=?", id).Rows()
+	err := DB.Table("post").Select("post.id as id, user.name as creator, post.title as title, post.topic as topic, post.description as description, post.content as content, post.status as status, post.created_at as created_at, post.updated_at as updated_at").Joins("join user on user.id = post.creator where post.creator=?", id).Find(&posts).Error
 	if err != nil {
 		return posts, err
-	}
-	for rows.Next() {
-		var id int
-		var name, title, topic, description, content string
-		var status int
-		var createdAt, updatedAt time.Time
-		rows.Scan(&id, &name, &title, &topic, &description, &content, &status, &createdAt, &updatedAt)
-		post := models.TransformPost{
-			ID:          id,
-			Creator:     name,
-			Title:       title,
-			Topic:       topic,
-			Description: description,
-			Content:     content,
-			Status:      status,
-			CreatedAt:   createdAt,
-			UpdatedAt:   updatedAt,
-		}
-		posts = append(posts, post)
 	}
 	return posts, nil
 
@@ -107,19 +67,12 @@ func ChangeStatusPostWithComment(idPost, idUser, status int, mess string) error 
 	}
 	return nil
 }
-func CreatePost(idCreator int, title, topic, des, content string) error {
-	newPost := models.Post{
-		Creator:     idCreator,
-		Title:       title,
-		Topic:       topic,
-		Description: des,
-		Content:     content,
-		Status:      0,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-	}
-	if err := DB.Save(&newPost).Error; err != nil {
+func CreatePost(post *models.Post) error {
+	if err := DB.Save(&post).Error; err != nil {
 		return err
 	}
 	return nil
+
 }
+
+// idCreator int, title, topic, des, content string

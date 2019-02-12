@@ -3,10 +3,14 @@ package services
 import (
 	"time"
 
+	"github.com/gin-gonic/contrib/sessions"
+	"github.com/gin-gonic/gin"
 	"github.com/hbl-duytv/intern-csm/constant"
 	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/models"
 )
+
+var SessionName interface{}
 
 func GetAllEditorUser() ([]models.User, error) {
 	var users []models.User
@@ -115,5 +119,26 @@ func HasLimitTimeConfirm(user models.User) bool {
 		return false
 	}
 	return true
+
+}
+
+func GetCurrentUser(c *gin.Context) interface{} {
+	session := sessions.Default(c)
+	session.Set("user", SessionName)
+	return session.Get("user")
+}
+
+func GetNameInCommentByPostID(idPost int) ([]string, error) {
+	var names []string
+	rows, err := DB.Table("user").Select("user.name").Joins("join comment on comment.commentator_id = user.id where comment.post_id=?", idPost).Rows()
+	if err != nil {
+		return names, err
+	}
+	for rows.Next() {
+		var name string
+		rows.Scan(&name)
+		names = append(names, name)
+	}
+	return names, nil
 
 }

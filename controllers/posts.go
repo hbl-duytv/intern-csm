@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -14,83 +13,92 @@ import (
 )
 
 func RenderPostManagementAdmin(c *gin.Context) {
-	session := sessions.Default(c)
-	username := session.Get("user")
+	username := services.GetCurrentUser(c)
 	if usernameString, ok := username.(string); ok {
 		if user, err := services.GetUserByUsername(usernameString); err == nil {
 			if posts, err := services.GetPostWithAdminPermission(); err == nil {
-				month, year, _ := services.GetTimeCreateUSer(user.ID)
-				c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
-
+				if month, year, err := services.GetTimeCreateUSer(user.ID); err == nil {
+					c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
+				}
 			}
 			return
 		}
 	}
-	c.Redirect(constant.DirectStatus, "/home")
+	c.Redirect(http.StatusMovedPermanently, "/home")
 }
 
 func RenderPostManagementEditor(c *gin.Context) {
 	var posts []models.TransformPost
-	session := sessions.Default(c)
-	username := session.Get("user")
+	username := services.GetCurrentUser(c)
 	if user, err := services.GetUserByUsername(username.(string)); err == nil {
 		if posts, err = services.GetPostWithEditorPermission(user.ID); err == nil {
-			month, year, _ := services.GetTimeCreateUSer(user.ID)
-			c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
+			if month, year, err := services.GetTimeCreateUSer(user.ID); err == nil {
+				c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "transformPost": posts, "index": 2, "title": "Post - Management"})
+			}
 		}
 		return
 	}
-	c.Redirect(constant.DirectStatus, "/home")
+	c.Redirect(http.StatusMovedPermanently, "/home")
 }
 func RenderCreatePost(c *gin.Context) {
-	session := sessions.Default(c)
-	username := session.Get("user")
+	username := services.GetCurrentUser(c)
 	if user, err := services.GetUserByUsername(username.(string)); err == nil {
-		month, year, _ := services.GetTimeCreateUSer(user.ID)
-		c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "index": 0, "title": "Create Post"})
+		if month, year, err := services.GetTimeCreateUSer(user.ID); err == nil {
+			c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "user": user, "index": 0, "title": "Create Post"})
+		}
 		return
 	}
-	c.Redirect(constant.DirectStatus, "/home")
+	c.Redirect(http.StatusMovedPermanently, "/home")
 }
 
 func RenderUpdatePost(c *gin.Context) {
-	idPost, _ := strconv.Atoi(c.Param("id"))
-	if post, err := services.GetPostById(idPost); err == nil {
-		month, year, _ := services.GetTimeCreateUSer(post.Creator)
-		c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "post": post, "index": 3, "title": "Update Post"})
-		return
+	if idPost, err := strconv.Atoi(c.Param("id")); err == nil {
+		if post, err := services.GetPostById(idPost); err == nil {
+			if month, year, err := services.GetTimeCreateUSer(post.Creator); err == nil {
+				c.HTML(http.StatusOK, "master.html", gin.H{"month": month, "year": year, "post": post, "index": 3, "title": "Update Post"})
+			}
+			return
+		}
+		c.Redirect(http.StatusMovedPermanently, "/home")
 	}
-	c.Redirect(constant.DirectStatus, "/home")
 }
 
 func RenderDetailPost(c *gin.Context) {
-	idPost, _ := strconv.Atoi(c.Param("id"))
-	var usernames []string
-	post, _ := services.GetPostById(idPost)
-	comments, _ := services.GetCommentsById(idPost)
-	for _, v := range comments {
-		var user models.User
-		services.DB.Find(&user, "id=?", v.CommentatorID)
-		usernames = append(usernames, user.Name)
+	idPost, err1 := strconv.Atoi(c.Param("id"))
+	post, err2 := services.GetPostById(idPost)
+	comments, err3 := services.GetCommentsById(idPost)
+	usernames, err4 := services.GetNameInCommentByPostID(idPost)
+	if err1 == nil && err2 == nil && err3 == nil && err4 == nil {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "post": post, "comment": comments, "username": usernames})
 	}
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "post": post, "comment": comments, "username": usernames})
+
 }
 
 func CreatePost(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
-	user, _ := services.GetUserByUsername(username.(string))
-	creator, _ := strconv.Atoi(c.PostForm("creator"))
+	user, err1 := services.GetUserByUsername(username.(string))
+	creator, err2 := strconv.Atoi(c.PostForm("creator"))
 	title := c.PostForm("title")
 	topic := c.PostForm("topic")
 	description := c.PostForm("description")
 	content := c.PostForm("content")
-	fmt.Println(title, topic, description, content)
+	if err1 != nil || err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "error": "Has error"})
+		return
+	}
 	if strings.Trim(title, " ") == "" || strings.Trim(topic, " ") == "" || description == "" || strings.Trim(content, " ") == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "error": "Nhập đầy đủ thông tin"})
 		return
 	}
-	if services.CreatePost(creator, title, topic, description, content) == nil {
+	post := models.Post{
+		Creator:     creator,
+		Title:       title,
+		Topic:       topic,
+		Description: description,
+		Content:     content,
+	}
+	if services.CreatePost(&post) == nil {
 		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "user": user, "message": "create post successfully!"})
 		return
 	}
@@ -101,13 +109,16 @@ func ActiveStatusPost(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
 	var user models.User
+	var err1 error
 	if usernameString, ok := username.(string); ok {
-		user, _ = services.GetUserByUsername(usernameString)
+		user, err1 = services.GetUserByUsername(usernameString)
 	}
-
-	idPost, _ := strconv.Atoi(c.PostForm("id"))
+	idPost, err2 := strconv.Atoi(c.PostForm("id"))
 	messageComment := c.PostForm("comment")
-
+	if err1 != nil || err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Has error!"})
+		return
+	}
 	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.ActiveNumber, messageComment) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Active status post successfully!"})
 		return
@@ -118,11 +129,16 @@ func DeActiveStatusPost(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("user")
 	var user models.User
+	var err1 error
 	if usernameString, ok := username.(string); ok {
-		user, _ = services.GetUserByUsername(usernameString)
+		user, err1 = services.GetUserByUsername(usernameString)
 	}
 
-	idPost, _ := strconv.Atoi(c.PostForm("id"))
+	idPost, err2 := strconv.Atoi(c.PostForm("id"))
+	if err1 != nil || err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Has error!"})
+		return
+	}
 	messageComment := c.PostForm("comment")
 	if services.ChangeStatusPostWithComment(idPost, user.ID, constant.DeactiveNumber, messageComment) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "DeActive status post successfully!"})
@@ -133,8 +149,11 @@ func DeActiveStatusPost(c *gin.Context) {
 }
 func DeletePost(c *gin.Context) {
 
-	idPost, _ := strconv.Atoi(c.PostForm("id"))
-
+	idPost, err := strconv.Atoi(c.PostForm("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Delete this post fail"})
+		return
+	}
 	if services.DeletePost(idPost) == nil {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete this post successfully"})
 		return
@@ -143,8 +162,11 @@ func DeletePost(c *gin.Context) {
 }
 func UpdateContentPost(c *gin.Context) {
 
-	id, _ := strconv.Atoi(c.PostForm("id"))
-
+	id, err := strconv.Atoi(c.PostForm("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "update post fail!"})
+		return
+	}
 	title := c.PostForm("title")
 	topic := c.PostForm("topic")
 	description := c.PostForm("description")
