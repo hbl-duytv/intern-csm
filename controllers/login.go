@@ -25,13 +25,12 @@ func Login(c *gin.Context) {
 	user, err := services.RequireLogin(username, password)
 	if err == nil {
 		session.Set("user", username)
-		services.SessionName = session.Get("user")
 		err := session.Save()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusUnauthorized, "error": "Failed to generate session token"})
 			return
 		}
-		if user.Status == constant.ActiveNumber {
+		if user.Status == constant.ActiveNumber && user.Confirm == constant.UserConfirmed {
 			c.Redirect(http.StatusMovedPermanently, "/home")
 			return
 		}
@@ -47,7 +46,7 @@ func RegisterSuccess(c *gin.Context) {
 	var messageSuccess []byte
 	token := c.Param("token")
 	if user, err := services.GetUserByToken(token); err == nil {
-		if user.Confirm == constant.DeactiveNumber {
+		if user.Confirm == constant.UserNotConfirmed {
 			if services.HasLimitTimeConfirm(user) {
 				messageSuccess = []byte("Xác nhận tài khoản thành công, vui lòng đợi kích hoạt từ người quản trị!")
 				services.ConfirmRegisterUser(&user)
@@ -59,6 +58,8 @@ func RegisterSuccess(c *gin.Context) {
 		}
 		c.Data(http.StatusOK, "text/html; charset=utf-8", messageSuccess)
 	}
+	messageFail := []byte("Xác nhận tài khoản thất bại, vui lòng thử lại!")
+	c.Data(http.StatusOK, "text/html; charset=utf-8", messageFail)
 }
 
 func SendConfirmRegister(c *gin.Context) {
@@ -122,7 +123,6 @@ func CheckUserExist(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "User exist!"})
-	return
 }
 func CheckEmailExist(c *gin.Context) {
 	email := c.PostForm("email")
@@ -132,7 +132,6 @@ func CheckEmailExist(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"check": false, "message": "Email exist!"})
-	return
 }
 
 func Index(c *gin.Context) {

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hbl-duytv/intern-csm/helper"
 	"github.com/hbl-duytv/intern-csm/services"
 )
 
@@ -18,4 +19,9 @@ func Home(c *gin.Context) {
 
 	}
 
+}
+func GetToken(c *gin.Context) {
+	token := c.Param("token")
+	result := helper.GetToken(token)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": result})
 }

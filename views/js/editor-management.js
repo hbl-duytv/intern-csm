@@ -140,71 +140,48 @@ var modalCreateEditor = function (callback) {
     $("#btn-add-editor").on("click", function () {
         $("#create-editor-modal").modal('show');
     });
-    $("#modal-btn-ok-create").on("click", function () {
-        callback(true);
-        $("#create-editor-modal").modal('hide');
+  $("#modal-btn-ok-create").on("click", function(){
+    callback(true);
+    $("#create-editor-modal").modal('hide');
+  });
+  $("#modal-btn-back-create").on("click", function(){
+    callback(false);
+    $("#create-editor-modal").modal('hide');
+  });
+}; 
+modalCreateEditor(function(confirm){
+  var usernameRegister = $("#usernameRegister").val()
+  var emailRegister = $("#emailRegister").val()
+  var nameRegister = $("#nameRegister").val()
+  var genderRegister = $("#genderRegister").val()
+  var birthdayRegister = $("#birthdayRegister").val()
+  var phoneNumberRegister = $("#phoneNumberRegister").val()
+  var statusRegister = $("#statusRegister").val()
+  if(confirm){
+      $.ajax({
+      type:'post',
+      url:'http://localhost:8000/create-user',
+      data:{
+        'username': usernameRegister,
+        'email': emailRegister,
+        'name': nameRegister,
+        'gender': genderRegister,
+        'birthday': birthdayRegister,
+        'phone_number': phoneNumberRegister,
+        'status': statusRegister
+      },
+      dataType:'json',
+      success: function(result){
+        if(result.status == 201){
+          $("#labelNotiModel").text('Tạo biên tập viên thành công!');
+          $("#notification-modal").modal('show');
+        } else {
+          $("#labelNotiModel").text('Tạo biên tập viên thất bại!');
+          $("#notification-modal").modal('show');
+        }
+      }
     });
-    $("#modal-btn-back-create").on("click", function () {
-        callback(false);
-        $("#create-editor-modal").modal('hide');
-    });
-};
-modalCreateEditor(function (confirm) {
-    var usernameRegister = $("#usernameRegister").val()
-    var passwordRegister = $("#passwordRegister").val()
-    var emailRegister = $("#emailRegister").val()
-    var confirmPasswordRegister = $("#confirmPasswordRegister").val()
-    var nameRegister = $("#nameRegister").val()
-    var genderRegister = $("#genderRegister").val()
-    var birthdayRegister = $("#birthdayRegister").val()
-    var phoneNumberRegister = $("#phoneNumberRegister").val()
-    var statusRegister = $("#statusRegister").val()
-    if (passwordRegister !== confirmPasswordRegister) {
-        $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
-    } else if (confirm) {
-        $.ajax({
-            type: 'post',
-            url: 'http://localhost:8000/create-user',
-            data: {
-                'username': usernameRegister,
-                'password': passwordRegister,
-                'email': emailRegister,
-                'name': nameRegister,
-                'gender': genderRegister,
-                'birthday': birthdayRegister,
-                'phone_number': phoneNumberRegister,
-                'status': statusRegister
-            },
-            dataType: 'json',
-            success: function (result) {
-                if (result.status == 201) {
-                    $("#labelNotiModel").text('Tạo biên tập viên thành công!');
-                    $("#notification-modal").modal('show');
-                } 
-            },
-            error: function (result) {
-                if (result.status == 400) {
-                    $("#labelNotiModel").text('Tạo biên tập viên thất bại!');
-                    $("#notification-modal").modal('show');
-                }
-            }
-        });
-    } else {
-
-    }
-});
-$("#confirmPasswordRegister").focusout(function () {
-    var passwordRegister = $("#passwordRegister").val()
-    var confirmPasswordRegister = $("#confirmPasswordRegister").val()
-    if (passwordRegister !== confirmPasswordRegister) {
-        $('#messageConfirmPass').css('color', 'red');
-        $("#messageConfirmPass").text('Hai mật khẩu khác nhau!');
-        $('#modal-btn-ok-create').attr('disabled', 'disabled');
-    } else {
-        $('#messageConfirmPass').css('color', 'green');
-        $("#messageConfirmPass").text('');
-        $('#modal-btn-ok-create').removeAttr('disabled');
-    }
+  }
 });
 $("#usernameRegister").focusout(function () {
     let username = $("#usernameRegister").val()

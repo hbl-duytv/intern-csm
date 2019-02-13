@@ -14,7 +14,7 @@ var SessionName interface{}
 
 func GetAllEditorUser() ([]models.User, error) {
 	var users []models.User
-	if err := DB.Debug().Where("type=? AND confirm=?", constant.DeactiveNumber, constant.ActiveNumber).Find(&users).Error; err != nil {
+	if err := DB.Debug().Where("type=? AND confirm=?", constant.DeactiveNumber, constant.UserConfirmed).Find(&users).Error; err != nil {
 		return users, err
 	}
 	return users, nil
@@ -29,6 +29,14 @@ func GetUserByToken(token string) (models.User, error) {
 func GetUserByUsername(username string) (models.User, error) {
 	var user models.User
 	if err := DB.Find(&user, "username=?", username).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+func GetUserByUsernamePassword(username string, password string) (models.User, error) {
+	var user models.User
+	passwordMD5 := helper.GetMD5Hash(password)
+	if err := DB.Where("username = ? AND password = ?", username, passwordMD5).Find(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil
@@ -62,20 +70,6 @@ func GetUserByID(id int) (models.User, error) {
 		return user, err
 	}
 	return user, nil
-}
-func CreateUser(username string, password string, email string, status int, typeUser int) error {
-	passwordMD5 := helper.GetMD5Hash(password)
-	newUser := models.User{
-		Username: username,
-		Password: passwordMD5,
-		Email:    email,
-		Type:     typeUser,
-		Status:   status,
-	}
-	if err := DB.Save(&newUser).Error; err != nil {
-		return err
-	}
-	return nil
 }
 func DeleteUser(id int) error {
 	var user models.User
@@ -124,7 +118,7 @@ func HasLimitTimeConfirm(user models.User) bool {
 
 func GetCurrentUser(c *gin.Context) interface{} {
 	session := sessions.Default(c)
-	session.Set("user", SessionName)
+	// session.Set("user", SessionName)
 	return session.Get("user")
 }
 
