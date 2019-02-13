@@ -1,0 +1,334 @@
+{{define "post-management"}}
+<div class="wrapper">
+
+    <aside style="padding-top: 0px;" class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="/views/images/user-default-160x160.png" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>{{.user.Username}}</p>
+                    <p></a><i class="fa fa-circle text-success"></i> Online</p>
+                </div>
+            </div>
+            <!-- search form -->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">MAIN NAVIGATION</li>
+                <li><a href="/home"><i class="fa fa-dashboard"></i> <span>Thống kê chung</span></a></li>
+                {{if eq .user.Type 0}}
+                <!--editor permission-->
+                <li><a href="/render-create-post"><i class="fa fa-file"></i> <span>Tạo bài viết</span></a></li>
+
+                <li><a href="/get-post-editor-permission"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+                {{else}}
+                <!--admin permission-->
+                <li><a href="/get-post-admin-permission3"><i class="fa fa-bars"></i> <span>Quản lý bài viết</span></a></li>
+
+
+
+                <li><a href="/editor-management2"><i class="fa fa-users"></i> <span>Quản lý biên tập
+                            viên</span></a></li>
+                {{end}}
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+    <!-- =============================================== -->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Quản lý bài viết
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="/home"><i class="fa fa-dashboard"></i> Home</a></li>
+                {{if eq .user.Type 0}}
+                <li><a href="/get-post-editor-permission">Quản lý bài viết</a></li>
+                {{else}}
+                <li><a href="/get-post-admin-permission3">Quản lý bài viết</a></li>
+                {{end}}
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <!-- <div>
+                    {{if eq .user.Type 0}}
+                    <button class="btn btn-primary" id="add-editor">Thêm bài viết</button>
+                    {{end}}
+                </div> -->
+            <hr>
+            <div>
+                <table id="editorsTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Creator</th>
+                            <th>Title</th>
+                            <th>Topic</th>
+                            <th>Description</th>
+                            <!-- <th>Content</th> -->
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    {{ $length := len .transformPost }} {{ if eq $length 0 }}
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-weight: bold;" colspan="9">No post to display</td>
+                        </tr>
+                    </tbody>
+                    {{else}}
+                    <tbody>
+                        {{if eq .user.Type 0}}
+
+
+                        {{range .transformPost}}
+                        <tr>
+                            <td>{{.ID}}</td>
+                            <td>{{.Creator}}</td>
+                            <td>{{.Title}}</td>
+                            <td>{{.Topic}}</td>
+                            <td>{{.Description}}</td>
+
+                            <td>
+                                {{if eq .Status 0}}
+                                Bài viết chưa được duyệt
+                                {{else}}
+                                Bài viết đã được duyệt
+                                {{end}}
+                            </td>
+                            <td>{{.CreatedAt}}</td>
+                            <td>{{.UpdatedAt}}</td>
+                            <td>
+                                <button id="update-{{.ID}}" class="btn-update-post">Sửa</button>
+                                <button class="btn-delete-post" id="delete-{{.ID}}">Xóa</button>
+                                <button class="btn-detail-post" id="detail-{{.ID}}">Xem chi tiết</button>
+                            </td>
+
+                        </tr>
+                        {{end}}
+                        {{else}}
+                        {{range .transformPost}}
+                        <tr>
+                            <td>{{.ID}}</td>
+                            <td>{{.Creator}}</td>
+                            <td>{{.Title}}</td>
+                            <td>{{.Topic}}</td>
+                            <td>{{.Description}}</td>
+
+                            <td>
+                                {{if eq .Status 0}}
+                                Bài viết chưa được duyệt
+                                {{else}}
+                                Bài viết đã được duyệt
+                                {{end}}
+                            </td>
+                            <td>{{.CreatedAt}}</td>
+                            <td>{{.UpdatedAt}}</td>
+                            <td>
+                                {{if eq .Status 0}}
+                                <button class="btn-browser-post" id="browser-{{.ID}}">Duyệt</button>
+                                {{else}}
+                                <button class="btn-not-browser-post" id="notbrowser-{{.ID}}">Bỏ duyệt</button>
+                                {{end}}
+                                <button id="update-{{.ID}}" class="btn-update-post">Sửa</button>
+                                <button class="btn-delete-post" id="delete-{{.ID}}">Xóa</button>
+                                <button class="btn-detail-post" id="detail-{{.ID}}">Xem chi tiết</button>
+                            </td>
+
+                        </tr>
+                        {{end}}
+                        {{end}}
+                    </tbody>
+                    {{end}}
+
+
+
+                </table>
+            </div>
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                id="active-modal">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="labelActiveModal">Duyệt bài viết này!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label for="comment">Nhận xét </label>
+                            <input class="form-control" name="comment" id="comment-active" type="text" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="modal-btn-back-active">Trở lại</button>
+                            <button type="button" class="btn btn-primary" id="modal-btn-ok-active">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                id="deactive-modal">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="labelDeactiveModal">Bỏ duyệt bài viết này!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label for="comment">Nhận xét </label>
+                            <input class="form-control" name="comment" id="comment-deactive" type="text" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="modal-btn-back-deactive">Trở lại</button>
+                            <button type="button" class="btn btn-primary" id="modal-btn-ok-deactive">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                id="delete-modal">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="labelDeleteModal">Xóa bài viết này! </h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="modal-btn-back-delete">Trở lại</button>
+                            <button type="button" class="btn btn-primary" id="modal-btn-ok-delete">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                id="update-modal">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="labelUpdateModal">Sửa bài viết này! </h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="modal-btn-back-update">Trở lại</button>
+                            <button type="button" class="btn btn-primary" id="modal-btn-ok-update">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                id="notification-modal">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="labelNotiModel"></h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" id="modal-btn-ok-noti">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBigModalLabel" aria-hidden="true" id="detail-post-modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="submit" class="close-detail-post close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="labelActiveModal">Xem chi tiết</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="detail-post-comment">
+                                <div class="form-group">
+                                    <label>Tiêu đề</label>
+
+                                    <input disabled type="text" id="detail-title" tabindex="1" class="form-control"
+                                        required />
+                                </div>
+                                <div class="form-group">
+                                    <label>Chủ đề</label>
+
+                                    <input disabled type="email" id="detail-topic" tabindex="1" class="form-control"
+                                        required />
+                                </div>
+                                <div class="form-group">
+                                    <label>Mô tả</label>
+
+                                    <input disabled type="email" id="detail-description" tabindex="1" class="form-control"
+                                        required />
+                                </div>
+                                <div class="form-group">
+                                    <label>Nội dung</label>
+                                    <div style="background: #EEEEEE; border: 1px solid gray;" id="detail-content">
+
+                                    </div>
+                                    <!-- <div style="background:#EEEEEE; border: 1px solid gray"  name='comment-detail' class='comment-detail- form-group'>
+                                        <label>Nhận xét
+
+                                        </label>
+                                        <div class="content-comment">
+
+                                        </div>
+                                        <div class="time-created-comment">
+
+                                        </div>
+                                        <div class="creator-comment">
+
+                                        </div>
+
+                                    </div> -->
+
+
+
+
+
+
+
+
+
+
+                            </form>
+                        </div>
+                        <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="modal-btn-back-create">Trở lại</button>
+                                <button type="button" class="btn btn-primary" id="modal-btn-ok-create">Thêm</button>
+                            </div> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 1.0.0
+        </div>
+        <strong>Copyright &copy; 2019 <a href="https://adminlte.io">CMS</a>.</strong> All rights
+        reserved.
+    </footer>
+</div>
+{{end}}
